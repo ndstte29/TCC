@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Fornecedores</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Lista de Fornecedores</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>CNPJ</th>
+                    <th>Razão Social</th>
+                    <th>Endereço</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="fornecedor : ${fornecedor}">
+                    <td th:text="${fornecedor.forCnpj}"></td>
+                    <td th:text="${fornecedor.forRazaoSocial}"></td>
+                    <td th:text="${fornecedor.forEndereco}"></td>
+                    <td>
+                        <a th:href="@{/fornecedor/editar/}+${fornecedor.forCnpj}">
+                            <button class="btn">Editar</button>
+                        </a>
+                        <a th:href="@{/fornecedor/excluir/}+${fornecedor.forCnpj}">
+                            <button class="btn">Excluir</button>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/fornecedor/novo">Adicionar Novo Fornecedor</a>
+    </div>
+</body>
+
+</html>

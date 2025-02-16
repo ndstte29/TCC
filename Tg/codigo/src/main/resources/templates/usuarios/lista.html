@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Lista de Usuários</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Login</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuarios : ${usuarios}">
+                    <td th:text="${usuarios.usuId}"></td>
+                    <td th:text="${usuarios.usuNome}"></td>
+                    <td th:text="${usuarios.usuLogin}"></td>
+                    <td>
+                        <a th:href="@{/usuarios/editar/}+${usuarios.usuId}">
+                            <button class="btn">Editar</button>
+                        </a>
+                        <a th:href="@{/usuarios/excluir/}+${usuarios.usuId}">
+                            <button class="btn">Excluir</button>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/usuarios/novo">Criar Novo Usuário</a>
+    </div>
+</body>
+
+</html>

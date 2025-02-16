@@ -1,0 +1,209 @@
+/* Estilos para o layout */
+body {
+    margin: 0;
+    font-family: Times, Times New Roman, serif;
+    background-color: #f5f5f5; /* Fundo neutro mais claro */
+}
+
+.sidebar {
+    height: 100%;
+    width: 230px; /* Largura da sidebar */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #daa520; 
+    padding-top: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Sombra leve */
+}
+
+.sidebar h2 {
+    color: black; /* Amarelo suave */
+    text-align: center;
+    font-size: 30px; /* Fonte discreta */
+    margin-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 2px;
+}
+
+.sidebar ul li {
+    padding: 2px;
+}
+
+.sidebar ul li a {
+    color: #ffffff; /* Cor do texto */
+    text-decoration: none; /* Remove o sublinhado */
+    display: block; /* Faz o link ocupar toda a área do li */
+    font-size: 18px; /* Tamanho da fonte */
+    padding: 8px 15px; /* Espaçamento interno */
+    border-radius: 2px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+}
+
+.sidebar ul li a:hover {
+    background-color: #6B4E4A; /* Cor de fundo ao passar o mouse */
+    color: #ffffff; /* Mantém a cor do texto branca */
+    font-weight: bold; /* Deixa o texto em negrito */
+}
+
+.content {
+    margin-left: 270px;
+    padding: 10px;
+}
+
+h1 {
+    font-size: 26px;
+    color: black; /* Cor da fonte */
+    background-color: #daa520; /* Cor de fundo da faixa */
+    padding: 15px 20px; /* Espaçamento interno para destacar a faixa */
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    margin-bottom: 20px; /* Espaçamento inferior */
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Estilos para os campos do formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 1px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
+    border-color: #daa520;
+    outline: none;
+}
+
+select {
+    padding: 10px;
+    border: 1px solid #ccc; /* Cor da borda */
+    border-radius: 4px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte */
+    transition: border-color 0.3s; /* Suaviza a mudança de cor da borda */
+    background-color: #ffffff; /* Fundo branco */
+}
+
+select:focus {
+    border-color: #daa520; /* Cor de destaque ao receber foco */
+    outline: none; /* Remove a borda padrão de foco */
+}
+
+button {
+    padding: 10px;
+    background-color: #4B3D3D;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button.btn {
+    width: 100px; /* Define um tamanho fixo para os botões */
+    padding: 8px; /* Ajusta o espaçamento interno */
+    font-size: 14px; /* Define o tamanho da fonte */
+    text-align: center; /* Centraliza o texto */;
+}
+
+button:hover {
+    background-color: #daa520;
+}
+
+a {
+    text-decoration: none;
+    color: #daa520;
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 20px;
+}
+
+.dropdown-content {
+    display: none;
+    position: relative;
+    background-color: #4B3D3D;
+    margin: 2px;
+    border-radius: 5px
+}
+
+.dropdown-content li {
+    padding: 10px;
+    text-align: right;
+}
+
+.dropdown-content li a {
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.dropdown-content li a:hover {
+    background-color: #D2B48C;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+th {
+    background-color: #daa520;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+td a {
+    color: #4B3D3D;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}

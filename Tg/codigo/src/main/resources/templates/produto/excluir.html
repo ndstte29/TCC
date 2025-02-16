@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+    <div class="content">
+        <h1>Excluir Produto</h1>
+        <div>
+            <span th:text="${erro}"></span>
+        </div>
+        <form action="/produto/excluir" th:object="${produto}" method="post">
+            <div>
+                <input type="hidden" name="proId" th:field="*{proId}">
+            </div>
+            <div>
+                Nome do Produto: <label type="text" th:text="*{proNome}"></label>
+            </div>
+            <div>
+                Categoria do Produto: <Label type="text" th:text="*{proCategoria}"></Label>
+            </div>
+            <div>
+                Quantidade do Estoque: <label type="text" th:text="*{proUnidade}"></label>
+            </div>
+            <div>
+                Vencimento do Produto: <label type="date" th:text="*{proVencimento}"></label>
+            </div>
+            <div>
+                Estoque minimo: <label type="text" th:text="*{proEstoqueminimo}"></label>
+            </div>
+            <div>
+                Estoque Maximo: <label type="text" th:text="*{proEstoquemaximo}"></label>
+            </div>
+            <button type="submit">Excluir Produto </button>
+    </form>
+    <a href="/produto/lista">Voltar à lista de produtos</a>
+</Div>
+</body>
+
+</html>

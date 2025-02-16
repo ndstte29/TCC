@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuário</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Editar Usuário</h1>
+        <form action="/usuarios/editar" method="post" th:object="${usuarios}">
+            <input type="hidden" th:field="*{usuId}" />
+            <div>
+                <label for="usuNome">Nome:</label>
+                <input type="text" id="usuNome" th:field="*{usuNome}" required>
+            </div>
+            <div>
+                <label for="usuLogin">Login:</label>
+                <input type="text" id="usuLogin" th:field="*{usuLogin}" required>
+            </div>
+            <div>
+                <label for="usuSenha">Senha:</label>
+                <input type="password" id="usuSenha" th:field="*{usuSenha}" required>
+            </div>
+            <div>
+                <button type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

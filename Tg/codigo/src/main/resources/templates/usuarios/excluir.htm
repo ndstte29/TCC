@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Usuário</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Excluir Usuário</h1>
+        <p>Tem certeza que deseja excluir o usuário <strong th:text="${usuarios.usuNome}"></strong>?</p>
+        <form action="/usuarios/excluir" method="post" th:object="${usuarios}">
+            <input type="hidden" th:field="*{usuId}" />
+            <div>
+                <button type="submit">Confirmar Exclusão</button>
+                <a href="/usuarios/lista">
+                    <button type="button">Cancelar</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

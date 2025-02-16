@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Editar Produto</title>
+</head>
+
+<body>
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Editar Produto</h1>
+        <form action="/produto/editar" th:object="${produto}" method="post">
+            <input type="hidden" th:field="*{proId}" />
+
+                <label for="proNome">Nome do Produto:</label>
+                <input type="text" id="proNome" th:field="*{proNome}" />
+
+                <label for="proCategoria">Categoria do Produto:</label>
+                <input type="text" id="proCategoria" th:field="*{proCategoria}" />
+
+                <label for="proUnidade">Quantidade do Estoque:</label>
+                <input type="number" id="proUnidade" th:field="*{proUnidade}" />
+
+                <label for="proVencimento">Vencimento do Produto:</label>
+                <input type="date" id="proVencimento" th:field="*{proVencimento}" />
+
+                <label for="proEstoqueminimo">Estoque Mínimo:</label>
+                <input type="number" id="proEstoqueminimo" th:field="*{proEstoqueminimo}" />
+
+                <label for="proEstoquemaximo">Estoque Máximo:</label>
+                <input type="number" id="proEstoquemaximo" th:field="*{proEstoquemaximo}" />
+
+            <label for="proFornecedor">Fornecedor</label>
+            <select th:field="*{fornecedorProduto.forCnpj}" required>
+                <option th:each="f: ${fornecedor}" th:value="${f.forCnpj}" th:text="${f.forRazaoSocial}"
+                    th:selected="${f.forCnpj == produto.fornecedorProduto.forCnpj}">
+                </option>
+            </select>
+                <button type="submit">Salvar</button>
+        </form>
+        <a href="/produto/lista">Voltar à lista de produtos</a>
+    </div>
+</body>
+
+</html>
