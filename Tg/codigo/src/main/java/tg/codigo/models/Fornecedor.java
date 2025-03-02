@@ -1,13 +1,6 @@
 package tg.codigo.models;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,18 +8,40 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(includeFieldNames=true)
+@ToString(includeFieldNames = true)
 @EqualsAndHashCode
 @Entity
-@Table(name = "TabelaFornecedores")
+@Table(name = "tabela_fornecedores")
 public class Fornecedor {
-    @Id
-    private long forCnpj;
-    @Column(length = 100)
-    private String forRazaoSocial;
-    @Column(length = 200)
-    private String forEndereco;
 
-    @OneToMany(mappedBy = "fornecedorProduto", cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
-    private List<Produtos> funcionarios = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long forId;
+    
+    @Column(length = 14, nullable = false, unique = true)
+    private Long forCnpj;
+
+    @Column(length = 100, nullable = false)
+    private String forRazaoSocial;
+
+    @Column(length = 100, nullable = false)
+    private String forLogradouro;
+
+    @Column(length = 10, nullable = false)
+    private String forNumero;
+
+    @Column(length = 100, nullable = false)
+    private String forCidade;
+
+    @Column(length = 100, nullable = false)
+    private String forBairro;
+
+    @Column(length = 2, nullable = false)
+    private String forEstado;
+
+    @Column(length = 9, nullable = false)
+    private String forCep;
+
+    @Column(length = 15, nullable = false)
+    private String forTelefone;
 }

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Fornecedores</title>
     <link rel="stylesheet" href="/css/style.css">
+    <title>Lista de Fornecedores</title>
 </head>
 
 <body>
@@ -14,31 +14,41 @@
 
     <div class="content">
         <h1>Lista de Fornecedores</h1>
+
         <table>
             <thead>
                 <tr>
                     <th>CNPJ</th>
                     <th>Razão Social</th>
-                    <th>Endereço</th>
+                    <th>Logradouro</th>
+                    <th>Número</th>
+                    <th>Cidade</th>
+                    <th>Bairro</th>
+                    <th>Estado</th>
+                    <th>CEP</th>
+                    <th>Telefone</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="fornecedor : ${fornecedor}">
+                <tr th:each="fornecedor : ${fornecedores}">
                     <td th:text="${fornecedor.forCnpj}"></td>
                     <td th:text="${fornecedor.forRazaoSocial}"></td>
-                    <td th:text="${fornecedor.forEndereco}"></td>
+                    <td th:text="${fornecedor.forLogradouro}"></td>
+                    <td th:text="${fornecedor.forNumero}"></td>
+                    <td th:text="${fornecedor.forCidade}"></td>
+                    <td th:text="${fornecedor.forBairro}"></td>
+                    <td th:text="${fornecedor.forEstado}"></td>
+                    <td th:text="${fornecedor.forCep}"></td>
+                    <td th:text="${fornecedor.forTelefone}"></td>
                     <td>
-                        <a th:href="@{/fornecedor/editar/}+${fornecedor.forCnpj}">
-                            <button class="btn">Editar</button>
-                        </a>
-                        <a th:href="@{/fornecedor/excluir/}+${fornecedor.forCnpj}">
-                            <button class="btn">Excluir</button>
-                        </a>
+                        <a th:href="@{/fornecedor/editar/{id}(id=${fornecedor.forId})}">Editar</a>
+                        <a th:href="@{/fornecedor/excluir/{id}(id=${fornecedor.forId})}">Excluir</a>
                     </td>
                 </tr>
             </tbody>
         </table>
+
         <a href="/fornecedor/novo">Adicionar Novo Fornecedor</a>
     </div>
 </body>

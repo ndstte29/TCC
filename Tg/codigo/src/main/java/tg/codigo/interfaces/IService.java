@@ -1,11 +1,10 @@
 package tg.codigo.interfaces;
 
-public interface IService <T,K> {
+import java.util.List;
 
-    public T salvar(T objeto);
-
-    public  T localizar(K atributo);
-
-    public void excluir (T objeto);
-
+public interface IService<T, K> {
+    T salvar(T objeto);
+    List<T> listarTodos();
+    T localizar(K atributo);
+    void excluir(T objeto);
 }

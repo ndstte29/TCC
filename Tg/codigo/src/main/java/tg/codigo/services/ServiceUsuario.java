@@ -15,7 +15,7 @@ public class ServiceUsuario implements IService<Usuarios,Long>{
     @Autowired
     private RepositoryUsuario repositoryUsuario;
 
-    public List<Usuarios> localizarTodos() {
+    public List<Usuarios> listarTodos() {
         return repositoryUsuario.findAll(); 
     }
 

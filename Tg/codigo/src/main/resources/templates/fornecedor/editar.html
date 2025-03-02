@@ -17,13 +17,31 @@
         <form action="/fornecedor/editar" th:object="${fornecedor}" method="post">
                 
                 <label for="forCnpj">CNPJ do Fornecedor:</label>
-                <input type="text" id="forCnpj" th:field="*{forCnpj}" />
+                <input type="text" id="forCnpj" th:field="*{forCnpj}" readonly />
 
-                <label for="forRazaoSocial">Nome do Fornecedor:</label>
-                <input type="text" id="forRazaoSocial" th:field="*{forRazaoSocial}" />
+                <label for="forRazaoSocial">Razão Social:</label>
+                <input type="text" id="forRazaoSocial" th:field="*{forRazaoSocial}" required />
 
-                <label for="forEndereco">forEndereço do Fornecedor:</label>
-                <input type="text" id="forEndereco" th:field="*{forEndereco}" />
+                <label for="forLogradouro">Logradouro:</label>
+                <input type="text" id="forLogradouro" th:field="*{forLogradouro}" required />
+
+                <label for="forNumero">Número:</label>
+                <input type="text" id="forNumero" th:field="*{forNumero}" required />
+
+                <label for="forCidade">Cidade:</label>
+                <input type="text" id="forCidade" th:field="*{forCidade}" required />
+
+                <label for="forBairro">Bairro:</label>
+                <input type="text" id="forBairro" th:field="*{forBairro}" required />
+
+                <label for="forEstado">Estado:</label>
+                <input type="text" id="forEstado" th:field="*{forEstado}" required />
+
+                <label for="forCep">CEP:</label>
+                <input type="text" id="forCep" th:field="*{forCep}" required />
+
+                <label for="forTelefone">Telefone:</label>
+                <input type="text" id="forTelefone" th:field="*{forTelefone}" required />
 
                 <button type="submit">Salvar</button>
         </form>

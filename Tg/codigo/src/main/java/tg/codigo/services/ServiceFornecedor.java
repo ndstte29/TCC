@@ -1,41 +1,40 @@
 package tg.codigo.services;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import tg.codigo.interfaces.IService;
 import tg.codigo.models.Fornecedor;
 import tg.codigo.repositories.RepositoryFornecedor;
 
 @Service
-public class ServiceFornecedor implements IService<Fornecedor,Long>{
+public class ServiceFornecedor implements IService<Fornecedor, Long> {
 
     @Autowired
-    private RepositoryFornecedor rfor;
+    private RepositoryFornecedor repositoryFornecedor;
 
     @Override
     public Fornecedor salvar(Fornecedor objeto) {
-        return rfor.save(objeto);
+        return repositoryFornecedor.save(objeto);
     }
 
+    @Override
     public List<Fornecedor> listarTodos() {
-        return rfor.findAll();
+        return repositoryFornecedor.findAll();
     }
+
+    @Override
+    public Fornecedor localizar(Long cnpj) {
+        return repositoryFornecedor.findById(cnpj).orElseThrow(() -> new RuntimeException("Fornecedor não encontrado"));
+    }
+
     @Override
     public void excluir(Fornecedor objeto) {
-       
-         try{
-            rfor.delete(objeto);
-        }
-        catch (DataIntegrityViolationException e){
-            throw new RuntimeException("Este registro não pode ser excluido.");
+        try {
+            repositoryFornecedor.delete(objeto);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Este fornecedor não pode ser excluído.");
         }
     }
-    @Override
-    public Fornecedor localizar(Long atributo) {
-       
-        return rfor.findById(atributo).get();
-    }
-    
 }

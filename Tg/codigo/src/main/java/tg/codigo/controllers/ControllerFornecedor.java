@@ -2,25 +2,28 @@ package tg.codigo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Fornecedor;
 import tg.codigo.services.ServiceFornecedor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequestMapping("/fornecedor")
-public class ControllerFornecedor {
-    
-    @Autowired
-    private ServiceFornecedor sfor;
+public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
 
-    public ControllerFornecedor(ServiceFornecedor sfor){
-        this.sfor = sfor;
+    @Autowired
+    private ServiceFornecedor serviceFornecedor;
+
+    @Override
+    @GetMapping("/lista")
+    public ModelAndView listarTodos() {
+        ModelAndView mv = new ModelAndView("fornecedor/lista");
+        mv.addObject("fornecedor", serviceFornecedor.listarTodos());
+        return mv;
     }
 
+    @Override
     @GetMapping("/novo")
     public ModelAndView getNovo() {
         ModelAndView mv = new ModelAndView("fornecedor/novo");
@@ -28,20 +31,57 @@ public class ControllerFornecedor {
         return mv;
     }
 
+    @Override
     @PostMapping("/novo")
-    public String postNovo(@ModelAttribute("fornecedor") Fornecedor forn) {
-        try{
-        sfor.salvar(forn);
-        }catch (Exception e){
-            return "redirect:/index";
-        }
-        return "redirect:/fornecedor/novo";
+    public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
+        serviceFornecedor.salvar(fornecedor);
+        return new ModelAndView("redirect:/fornecedor/lista");
     }
 
-    @GetMapping("/lista")
-    public ModelAndView listarfornecedores() {
-        ModelAndView mv = new ModelAndView("fornecedor/lista");
-        mv.addObject("fornecedor", sfor.listarTodos());
+    @Override
+    @GetMapping("/editar/{id}")
+    public ModelAndView editar(@PathVariable("id") Long id) {
+        ModelAndView mv = new ModelAndView("fornecedor/editar");
+        Fornecedor fornecedor = serviceFornecedor.localizar(id);
+        if (fornecedor != null) {
+            mv.addObject("fornecedor", fornecedor);
+        } else {
+            mv.setViewName("redirect:/fornecedor/lista");
+        }
+        return mv;
+    }
+
+    @PostMapping("/editar")
+    public ModelAndView editar(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
+        serviceFornecedor.salvar(fornecedor);
+        return new ModelAndView("redirect:/fornecedor/lista");
+    }
+
+    @Override
+    @GetMapping("/excluir/{id}")
+    public ModelAndView excluir(@PathVariable("id") Long id) {
+        ModelAndView mv = new ModelAndView("fornecedor/excluir");
+        Fornecedor fornecedor = serviceFornecedor.localizar(id);
+        if (fornecedor != null) {
+            mv.addObject("fornecedor", fornecedor);
+        } else {
+            mv.setViewName("redirect:/fornecedor/lista");
+        }
+        return mv;
+    }
+
+    @PostMapping("/excluir")
+    @Override
+    public ModelAndView remover(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
+        ModelAndView mv;
+        try {
+            serviceFornecedor.excluir(fornecedor);
+            mv = new ModelAndView("redirect:/fornecedor/lista");
+        } catch (RuntimeException e) {
+            mv = new ModelAndView("fornecedor/excluir");
+            mv.addObject("fornecedor", fornecedor);
+            mv.addObject("erro", e.getMessage());
+        }
         return mv;
     }
 }

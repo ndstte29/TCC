@@ -36,9 +36,9 @@
                 <input type="number" id="proEstoquemaximo" th:field="*{proEstoquemaximo}" />
 
             <label for="proFornecedor">Fornecedor</label>
-            <select th:field="*{fornecedorProduto.forCnpj}" required>
-                <option th:each="f: ${fornecedor}" th:value="${f.forCnpj}" th:text="${f.forRazaoSocial}"
-                    th:selected="${f.forCnpj == produto.fornecedorProduto.forCnpj}">
+            <select th:field="*{fornecedorProduto.forId}" required>
+                <option th:each="f: ${fornecedor}" th:value="${f.forId}" th:text="${f.forRazaoSocial}"
+                    th:selected="${f.forId == produto.fornecedorProduto.forId}">
                 </option>
             </select>
                 <button type="submit">Salvar</button>

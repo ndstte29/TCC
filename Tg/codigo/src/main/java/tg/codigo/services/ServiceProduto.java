@@ -12,26 +12,26 @@ import tg.codigo.repositories.RepositoryProduto;
 public class ServiceProduto implements IService<Produtos, Long> {
 
     @Autowired
-    private RepositoryProduto rpro;
+    private RepositoryProduto repositoryProduto;
 
     @Override
     public Produtos salvar(Produtos objeto) {
-        return rpro.save(objeto);
+        return repositoryProduto.save(objeto);
     }
 
     public List<Produtos> listarTodos() {
-        return rpro.findAll();
+        return repositoryProduto.findAll();
     }
     @Override
     public Produtos localizar(Long atributo) {
        
-        return rpro.findById(atributo).get();
+        return repositoryProduto.findById(atributo).get();
     }
     @Override
     public void excluir(Produtos objeto) {
        
          try{
-            rpro.delete(objeto);
+            repositoryProduto.delete(objeto);
         }
         catch (DataIntegrityViolationException e){
             throw new RuntimeException("Este registro não pode ser excluido.");

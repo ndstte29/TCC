@@ -19,7 +19,7 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     @GetMapping("/lista")
     public ModelAndView listarTodos() {
         ModelAndView mv = new ModelAndView("usuarios/lista");
-        mv.addObject("usuarios", serviceUsuario.localizarTodos());
+        mv.addObject("usuarios", serviceUsuario.listarTodos());
         return mv;
     }
 

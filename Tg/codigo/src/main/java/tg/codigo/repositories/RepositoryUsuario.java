@@ -7,5 +7,4 @@ import tg.codigo.models.Usuarios;
 
 @Repository
 public interface RepositoryUsuario extends JpaRepository<Usuarios, Long> {
-    
 }
