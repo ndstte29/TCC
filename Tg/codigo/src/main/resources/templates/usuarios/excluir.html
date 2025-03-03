@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Usuarios</title>
+</head>
+
+<body>
+    <div th:replace="fragments/menu :: menu"></div>
+    <div class="content">
+        <h1>Excluir Usuarios</h1>
+        <div>
+            <span th:text="${erro}"></span>
+        </div>
+        <form action="/usuarios/excluir" th:object="${usuarios}" method="post">
+            <div>
+                <input type="hidden" name="usuId" th:field="*{usuId}">
+            </div>
+            <div>
+                Nome do Usuario: <label type="text" th:text="*{usuNome}"></label>
+            </div>
+            <div>
+                Login do Usuario: <Label type="text" th:text="*{usuLogin}"></Label>
+            </div>
+            <button type="submit">Excluir Usuario</button>
+    </form>
+    <a href="/usuarios/lista">Voltar à lista de usuarios</a>
+</Div>
+</body>
+
+</html>

@@ -7,4 +7,5 @@ public interface IService<T, K> {
     List<T> listarTodos();
     T localizar(K atributo);
     void excluir(T objeto);
+    T Atualizar(T objeto);
 }

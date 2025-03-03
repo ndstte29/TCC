@@ -37,4 +37,10 @@ public class ServiceUsuario implements IService<Usuarios,Long>{
             throw new RuntimeException("Este registro não pode ser excluido.");
         }
     }
+
+    @Override
+    public Usuarios Atualizar(Usuarios objeto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'Atualizar'");
+    }
 }

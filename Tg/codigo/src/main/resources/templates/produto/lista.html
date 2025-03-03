@@ -35,7 +35,7 @@
                     <td th:text="${produto.proCategoria}"></td>
                     <td th:text="${produto.proVencimento}"></td>
                     <td
-                        th:text="${produto.fornecedorProduto != null ? produto.fornecedorProduto.forRazaoSocial : 'Fornecedor não disponível'}">
+                        th:text="${produto.fornecedor != null ? produto.fornecedor.forRazaoSocial : 'Fornecedor não disponível'}">
                     </td>
                     <td th:text="${produto.proUnidade}"></td>
                     <td th:text="${produto.proEstoqueminimo}"></td>

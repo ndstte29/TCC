@@ -10,8 +10,7 @@
 
 <body>
 
-    <div th:replace="fragments/menu :: menu"></div>
-
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <div class="content">
         <h1>Lista de Fornecedores</h1>
 
@@ -31,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="fornecedor : ${fornecedores}">
+                <tr th:each="fornecedor : ${fornecedor}">
                     <td th:text="${fornecedor.forCnpj}"></td>
                     <td th:text="${fornecedor.forRazaoSocial}"></td>
                     <td th:text="${fornecedor.forLogradouro}"></td>
@@ -42,8 +41,16 @@
                     <td th:text="${fornecedor.forCep}"></td>
                     <td th:text="${fornecedor.forTelefone}"></td>
                     <td>
-                        <a th:href="@{/fornecedor/editar/{id}(id=${fornecedor.forId})}">Editar</a>
-                        <a th:href="@{/fornecedor/excluir/{id}(id=${fornecedor.forId})}">Excluir</a>
+                        <div>
+                            <a th:href="@{/fornecedor/editar/{id}(id=${fornecedor.forId})}">
+                                <button class="btn">Editar</button>
+                            </a>
+                        </div>
+                        <div>
+                            <a th:href="@{/fornecedor/excluir/{id}(id=${fornecedor.forId})}">
+                                <button class="btn">Excluir</button>
+                            </a>
+                        </div>                    
                     </td>
                 </tr>
             </tbody>

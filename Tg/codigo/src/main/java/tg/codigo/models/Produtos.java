@@ -1,5 +1,7 @@
 package tg.codigo.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,6 +34,9 @@ public class Produtos {
 
     @Column(nullable = false)
     private int proEstoquemaximo;
+
+    @Column(nullable = false)
+    private LocalDate proVencimento; 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "forId", referencedColumnName = "forId")

@@ -37,4 +37,10 @@ public class ServiceProdutoVenda implements IService<ProdutoVenda, Long> {
             throw new RuntimeException("Esta relação Produto-Venda não pode ser excluída.");
         }
     }
+
+    @Override
+    public ProdutoVenda Atualizar(ProdutoVenda objeto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'Atualizar'");
+    }
 }

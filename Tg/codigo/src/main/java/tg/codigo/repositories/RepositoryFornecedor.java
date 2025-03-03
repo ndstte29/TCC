@@ -7,5 +7,5 @@ import tg.codigo.models.Fornecedor;
 
 @Repository
 public interface RepositoryFornecedor extends JpaRepository<Fornecedor, Long> {
-    
+    Fornecedor findByForCnpj(String forCnpj); 
 }

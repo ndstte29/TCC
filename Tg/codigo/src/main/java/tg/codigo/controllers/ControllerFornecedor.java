@@ -52,10 +52,20 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
     }
 
     @PostMapping("/editar")
-    public ModelAndView editar(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
-        serviceFornecedor.salvar(fornecedor);
-        return new ModelAndView("redirect:/fornecedor/lista");
+    public ModelAndView postEditar(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
+    ModelAndView mv;
+    try {
+        // Certifique-se de que a atualização está funcionando corretamente
+        serviceFornecedor.Atualizar(fornecedor);  // Chama o método Atualizar do service
+        mv = new ModelAndView("redirect:/fornecedor/lista");  // Redireciona para a lista
+    } catch (RuntimeException e) {
+        mv = new ModelAndView("fornecedor/editar");
+        mv.addObject("fornecedor", fornecedor);
+        mv.addObject("erro", e.getMessage());  // Exibe o erro se houver algum problema
     }
+    return mv;
+}
+
 
     @Override
     @GetMapping("/excluir/{id}")

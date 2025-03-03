@@ -37,4 +37,10 @@ public class ServiceVenda implements IService<Venda, Long> {
             throw new RuntimeException("Esta venda não pode ser excluída.");
         }
     }
+
+    @Override
+    public Venda Atualizar(Venda objeto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'Atualizar'");
+    }
 }

@@ -10,8 +10,7 @@
 
 <body>
 
-    <div th:replace="fragments/menu :: menu"></div>
-
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <div class="content">
         <h1>Novo Fornecedor</h1>
         <form action="/fornecedor/novo" th:object="${fornecedor}" method="post">

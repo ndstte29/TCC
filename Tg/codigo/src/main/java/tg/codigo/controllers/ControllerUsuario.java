@@ -47,7 +47,7 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
         ModelAndView mv = new ModelAndView("usuarios/editar");
         Usuarios usuario = serviceUsuario.localizar(id);
         if (usuario != null) {
-            mv.addObject("usuario", usuario);
+            mv.addObject("usuarios", usuario);
         } else {
             mv.setViewName("redirect:/usuarios/lista"); // Redireciona se o usuário não for encontrado
         }
@@ -66,9 +66,9 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     @GetMapping("/excluir/{id}")
     public ModelAndView excluir(@PathVariable("id") Long id) {
         ModelAndView mv = new ModelAndView("usuarios/excluir");
-        Usuarios usuario = serviceUsuario.localizar(id);
-        if (usuario != null) {
-            mv.addObject("usuario", usuario);
+        Usuarios usuarios = serviceUsuario.localizar(id);
+        if (usuarios != null) {
+            mv.addObject("usuarios", usuarios);
         } else {
             mv.setViewName("redirect:/usuarios/lista"); // Redireciona se o usuário não for encontrado
         }
@@ -78,14 +78,14 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     // Confirmar exclusão de um usuário
     @PostMapping("/excluir")
     @Override
-    public ModelAndView remover(@ModelAttribute("usuario") Usuarios usuario) {
+    public ModelAndView remover(@ModelAttribute("usuarios") Usuarios usuarios) {
         ModelAndView mv;
         try {
-            serviceUsuario.excluir(usuario);
+            serviceUsuario.excluir(usuarios);
             mv = new ModelAndView("redirect:/usuarios/lista");
         } catch (RuntimeException e) {
             mv = new ModelAndView("usuarios/excluir");
-            mv.addObject("usuario", usuario);
+            mv.addObject("usuarios", usuarios);
             mv.addObject("erro", e.getMessage());
         }
         return mv;

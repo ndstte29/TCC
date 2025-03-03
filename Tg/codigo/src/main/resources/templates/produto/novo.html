@@ -38,9 +38,9 @@
             <input type="number" id="proEstoquemaximo" th:field="*{proEstoquemaximo}" required>
 
             <label for="proFornecedor">Fornecedor</label>
-            <select th:field="*{fornecedorProduto.forId}" required>
+            <select th:field="*{fornecedor.forId}" required>
                 <option th:each="f: ${fornecedor}" th:value="${f.forId}" th:text="${f.forRazaoSocial}"
-                    th:selected="${f.forId == produto.fornecedorProduto.forId}">
+                    th:selected="${f.forId == produto.fornecedor.forId}">
                 </option>
             </select>
 
