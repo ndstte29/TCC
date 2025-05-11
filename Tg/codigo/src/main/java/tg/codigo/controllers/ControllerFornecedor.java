@@ -35,12 +35,7 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
 
     @Override
     @PostMapping("/novo")
-<<<<<<< HEAD
-    public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor,
-                                RedirectAttributes redirectAttributes) {
-=======
     public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor,  RedirectAttributes redirectAttributes) {
->>>>>>> 8d170c75fd494abd4b389b85a5d5dd187d1ba75a
         serviceFornecedor.salvar(fornecedor);
         redirectAttributes.addFlashAttribute("success", "Fornecedor cadastrado com sucesso!");
         return new ModelAndView("redirect:/fornecedor/lista");
