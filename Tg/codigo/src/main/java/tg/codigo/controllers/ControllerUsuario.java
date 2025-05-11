@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import jakarta.servlet.http.HttpSession;
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Usuarios;
@@ -38,13 +37,12 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     // Salvar um novo usuário
     @Override
     @PostMapping("/novo")
-    public ModelAndView postNovo(@ModelAttribute("usuarios") Usuarios usuarios,  RedirectAttributes redirectAttributes) {
+    public ModelAndView postNovo(@ModelAttribute("usuarios") Usuarios usuarios, RedirectAttributes redirectAttributes) {
         serviceUsuario.salvar(usuarios);
         redirectAttributes.addFlashAttribute("success", "Usuario cadastrado com sucesso!");
         return new ModelAndView("redirect:/usuarios/lista");
     }
 
-    // Exibir formulário para editar um usuário
     @Override
     @GetMapping("/editar/{id}")
     public ModelAndView editar(@PathVariable("id") Long id) {
@@ -58,10 +56,13 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
         return mv;
     }
 
-    // Atualizar um usuário existente
     @PostMapping("/editar")
-    public ModelAndView editar(@ModelAttribute("usuario") Usuarios usuario) {
+    public ModelAndView editar(
+            @ModelAttribute("usuario") Usuarios usuario,
+            RedirectAttributes redirectAttributes) {
+
         serviceUsuario.salvar(usuario);
+        redirectAttributes.addFlashAttribute("success", "Usuário atualizado com sucesso!");
         return new ModelAndView("redirect:/usuarios/lista");
     }
 
@@ -74,18 +75,18 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
         if (usuarios != null) {
             mv.addObject("usuarios", usuarios);
         } else {
-            mv.setViewName("redirect:/usuarios/lista"); // Redireciona se o usuário não for encontrado
+            mv.setViewName("redirect:/usuarios/lista");
         }
         return mv;
     }
 
-    // Confirmar exclusão de um usuário
     @PostMapping("/excluir")
     @Override
-    public ModelAndView remover(@ModelAttribute("usuarios") Usuarios usuarios) {
+    public ModelAndView remover(@ModelAttribute("usuarios") Usuarios usuarios, RedirectAttributes redirectAttributes) {
         ModelAndView mv;
         try {
             serviceUsuario.excluir(usuarios);
+            redirectAttributes.addFlashAttribute("success", "Usuário excluído com sucesso!");
             mv = new ModelAndView("redirect:/usuarios/lista");
         } catch (RuntimeException e) {
             mv = new ModelAndView("usuarios/excluir");
@@ -106,20 +107,21 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     }
 
     @PostMapping("/login")
-    public String processLogin(
-            @RequestParam String usuLogin,
-            @RequestParam String usuSenha,
-            HttpSession session) {
+public String processLogin(
+        @RequestParam String usuLogin,
+        @RequestParam String usuSenha,
+        HttpSession session) {
 
-        Usuarios usuario = serviceUsuario.buscarPorLoginESenha(usuLogin, usuSenha);
+    Usuarios usuario = serviceUsuario.buscarPorLoginESenha(usuLogin, usuSenha);
 
-        if (usuario != null) {
-            return "redirect:/index";
-        } else {
-            session.setAttribute("loginError", true);
-            return "redirect:/usuarios/login";
-        }
+    if (usuario != null) {
+        session.setAttribute("usuarioLogado", usuario);  // Configura o usuário na sessão
+        return "redirect:/index";  // Redireciona para a página principal após o login
+    } else {
+        session.setAttribute("loginError", true);
+        return "redirect:/usuarios/login";  // Muda o redirecionamento para /usuarios/login
     }
+}
 
     @GetMapping("/esqueci-senha")
     public ModelAndView mostrarEsqueciSenha() {

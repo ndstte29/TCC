@@ -1,0 +1,28 @@
+<!-- fragments/alertas.html -->
+<div th:fragment="alertas">
+    <!-- Alerta de sucesso -->
+    <div id="alert-success" th:if="${success}" class="alert alert-success" role="alert">
+        <span th:text="${success}"></span>
+    </div>
+
+    <!-- Alerta de erro -->
+    <div id="alert-error" th:if="${erro} ?: ${errorMessage}" class="alert" role="alert">
+        <span th:text="${erro} ?: ${errorMessage}"></span>
+    </div>
+
+    <script>
+    setTimeout(() => {
+        const success = document.getElementById('alert-success');
+        const error = document.getElementById('alert-error');
+
+        if (success) {
+            success.style.display = 'none';
+        }
+
+        if (error) {
+            error.style.display = 'none';
+        }
+    }, 5000);
+</script>
+
+</div>

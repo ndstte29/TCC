@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Fornecedor;
+import tg.codigo.models.Usuarios;
 import tg.codigo.services.ServiceFornecedor;
 
 @Controller
@@ -16,6 +18,9 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
 
     @Autowired
     private ServiceFornecedor serviceFornecedor;
+
+    private HttpSession session;
+
 
     @Override
     @GetMapping("/lista")
@@ -83,17 +88,26 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
     }
 
     @PostMapping("/excluir")
-    @Override
-    public ModelAndView remover(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
-        ModelAndView mv;
-        try {
-            serviceFornecedor.excluir(fornecedor);
-            mv = new ModelAndView("redirect:/fornecedor/lista");
-        } catch (RuntimeException e) {
-            mv = new ModelAndView("fornecedor/excluir");
-            mv.addObject("fornecedor", fornecedor);
-            mv.addObject("erro", e.getMessage());
+    public ModelAndView remover(@ModelAttribute("fornecedor") Fornecedor fornecedor,
+                                RedirectAttributes redirectAttributes) {
+
+        // Obtendo o usuário logado diretamente da sessão
+        Usuarios usuarioLogado = (Usuarios) session.getAttribute("usuarioLogado");
+
+        // Verifica se o usuário tem permissão de ADMIN
+        if (usuarioLogado == null || !"ADMIN".equals(usuarioLogado.getUsuPermissao())) {
+            redirectAttributes.addFlashAttribute("erro", "Você não tem permissão para excluir fornecedores.");
+            return new ModelAndView("redirect:/fornecedor/lista");
         }
-        return mv;
+
+        try {
+            // Chama o serviço para excluir o fornecedor
+            serviceFornecedor.excluir(fornecedor);
+            redirectAttributes.addFlashAttribute("success", "Fornecedor excluído com sucesso!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/fornecedor/lista");
     }
 }

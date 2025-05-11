@@ -2,24 +2,29 @@
 body {
     margin: 0;
     font-family: Times, Times New Roman, serif;
-    background-color: #f5f5f5; /* Fundo neutro mais claro */
+    background-color: #f5f5f5;
+    /* Fundo neutro mais claro */
 }
 
 .sidebar {
     height: 100%;
-    width: 230px; /* Largura da sidebar */
+    width: 230px;
+    /* Largura da sidebar */
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #daa520; 
+    background-color: #daa520;
     padding-top: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Sombra leve */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    /* Sombra leve */
 }
 
 .sidebar h2 {
-    color: black; /* Amarelo suave */
+    color: black;
+    /* Amarelo suave */
     text-align: center;
-    font-size: 30px; /* Fonte discreta */
+    font-size: 30px;
+    /* Fonte discreta */
     margin-bottom: 10px;
 }
 
@@ -33,19 +38,29 @@ body {
 }
 
 .sidebar ul li a {
-    color: #ffffff; /* Cor do texto */
-    text-decoration: none; /* Remove o sublinhado */
-    display: block; /* Faz o link ocupar toda a área do li */
-    font-size: 18px; /* Tamanho da fonte */
-    padding: 8px 15px; /* Espaçamento interno */
-    border-radius: 2px; /* Bordas arredondadas */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+    color: #ffffff;
+    /* Cor do texto */
+    text-decoration: none;
+    /* Remove o sublinhado */
+    display: block;
+    /* Faz o link ocupar toda a área do li */
+    font-size: 18px;
+    /* Tamanho da fonte */
+    padding: 8px 15px;
+    /* Espaçamento interno */
+    border-radius: 2px;
+    /* Bordas arredondadas */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Transição suave */
 }
 
 .sidebar ul li a:hover {
-    background-color: #6B4E4A; /* Cor de fundo ao passar o mouse */
-    color: #ffffff; /* Mantém a cor do texto branca */
-    font-weight: bold; /* Deixa o texto em negrito */
+    background-color: #6B4E4A;
+    /* Cor de fundo ao passar o mouse */
+    color: #ffffff;
+    /* Mantém a cor do texto branca */
+    font-weight: bold;
+    /* Deixa o texto em negrito */
 }
 
 .content {
@@ -55,12 +70,18 @@ body {
 
 h1 {
     font-size: 26px;
-    color: black; /* Cor da fonte */
-    background-color: #daa520; /* Cor de fundo da faixa */
-    padding: 15px 20px; /* Espaçamento interno para destacar a faixa */
-    border-radius: 5px; /* Bordas arredondadas */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
-    margin-bottom: 20px; /* Espaçamento inferior */
+    color: black;
+    /* Cor da fonte */
+    background-color: #daa520;
+    /* Cor de fundo da faixa */
+    padding: 15px 20px;
+    /* Espaçamento interno para destacar a faixa */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra leve */
+    margin-bottom: 20px;
+    /* Espaçamento inferior */
 }
 
 p {
@@ -108,16 +129,23 @@ input[type="password"]:focus {
 
 select {
     padding: 10px;
-    border: 1px solid #ccc; /* Cor da borda */
-    border-radius: 4px; /* Bordas arredondadas */
-    font-size: 16px; /* Tamanho da fonte */
-    transition: border-color 0.3s; /* Suaviza a mudança de cor da borda */
-    background-color: #ffffff; /* Fundo branco */
+    border: 1px solid #ccc;
+    /* Cor da borda */
+    border-radius: 4px;
+    /* Bordas arredondadas */
+    font-size: 16px;
+    /* Tamanho da fonte */
+    transition: border-color 0.3s;
+    /* Suaviza a mudança de cor da borda */
+    background-color: #ffffff;
+    /* Fundo branco */
 }
 
 select:focus {
-    border-color: #daa520; /* Cor de destaque ao receber foco */
-    outline: none; /* Remove a borda padrão de foco */
+    border-color: #daa520;
+    /* Cor de destaque ao receber foco */
+    outline: none;
+    /* Remove a borda padrão de foco */
 }
 
 button {
@@ -130,11 +158,14 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
 button.btn {
-    width: 100px; /* Define um tamanho fixo para os botões */
-    padding: 8px; /* Ajusta o espaçamento interno */
-    font-size: 14px; /* Define o tamanho da fonte */
-    text-align: center; /* Centraliza o texto */;
+    margin-top: -2px;
+    width: 80px;
+    padding: 7px;
+    font-size: 14px;
+    text-align: center;
+    ;
 }
 
 button:hover {
@@ -185,7 +216,8 @@ table {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -211,6 +243,7 @@ td a {
 td a:hover {
     text-decoration: underline;
 }
+
 /* Adicione ao seu style.css */
 input:disabled {
     background-color: #f0f0f0;
@@ -227,18 +260,20 @@ input:disabled {
     left: 0;
     color: #666;
 }
+
 /* Estilo para caixa de erro */
 .alert {
     background-color: #f8d7da;
     color: #721c24;
     padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid #f5c6cb;
+    border: 1px solid #c3e6cb;
     border-radius: 5px;
     font-size: 16px;
     font-family: Arial, sans-serif;
     display: flex;
     align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -246,11 +281,12 @@ input:disabled {
     z-index: 1000;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;  /* Largura da caixa, pode ser alterada */
-    max-width: 600px;  /* Limite máximo da largura */
-    margin: 10px auto;  /* Centraliza a caixa no topo */
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
     padding: 20px;
     font-size: 18px;
+    font-weight: bold;
 }
 
 /* Caixa de Sucesso */
@@ -290,4 +326,3 @@ input:disabled {
     content: "⚠️";
     margin-right: 10px;
 }
-

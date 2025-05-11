@@ -9,12 +9,12 @@ public interface Icontrolador<T, K> {
 
     public ModelAndView getNovo();
 
-    ModelAndView postNovo(T objeto, RedirectAttributes redirectAttributes); // Adicione RedirectAttributes
+    ModelAndView postNovo(T objeto, RedirectAttributes redirectAttributes);
 
-    public ModelAndView editar(K atributo); // Mantenha apenas este método
+    public ModelAndView editar(K atributo);
 
     public ModelAndView excluir(K atributo);
 
-    public ModelAndView remover(T objeto);
+    public ModelAndView remover(T objeto, RedirectAttributes redirectAttributes);
 
 }

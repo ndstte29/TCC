@@ -1,19 +1,10 @@
 package tg.codigo.controllers;
-
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Produtos;
 import tg.codigo.services.ServiceFornecedor;
@@ -25,6 +16,7 @@ public class ControllerProduto implements Icontrolador<Produtos, Long> {
 
     @Autowired
     private ServiceProduto serviceProduto;
+
     @Autowired
     private ServiceFornecedor serviceFornecedor;
 
@@ -43,12 +35,15 @@ public class ControllerProduto implements Icontrolador<Produtos, Long> {
 
     @Override
     @PostMapping("/novo")
-    public ModelAndView postNovo(
-            @ModelAttribute("produto") Produtos produto,
-            RedirectAttributes redirectAttributes) {
-        serviceProduto.salvar(produto);
-        redirectAttributes.addFlashAttribute("success", "Produto cadastrado com sucesso!");
-        return new ModelAndView("redirect:/produto/lista");
+    public ModelAndView postNovo(@ModelAttribute("produto") Produtos produto, RedirectAttributes redirectAttributes) {
+        try {
+            serviceProduto.salvar(produto);
+            redirectAttributes.addFlashAttribute("success", "Produto cadastrado com sucesso!");
+            return new ModelAndView("redirect:/produto/lista");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            return new ModelAndView("redirect:/produto/novo");
+        }
     }
 
     @Override
@@ -61,55 +56,45 @@ public class ControllerProduto implements Icontrolador<Produtos, Long> {
     }
 
     @PostMapping("/editar")
-    public ModelAndView editar(@ModelAttribute("produto") Produtos produto, @RequestParam("proId") Long id,
-            Model model) {
+    public ModelAndView editar(@ModelAttribute("produto") Produtos produto,
+            @RequestParam("proId") Long id,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         produto.setProId(id);
-
-        // Validação: Verificar se o estoque máximo não é menor que o estoque mínimo
-        if (produto.getProEstoquemaximo() < produto.getProEstoqueminimo()) {
-            model.addAttribute("errorMessage", "O estoque máximo não pode ser menor que o estoque mínimo.");
-            model.addAttribute("produto", produto); // Repassar o produto com os dados
-            model.addAttribute("fornecedor", serviceFornecedor.listarTodos()); // Repassar fornecedores
-            return new ModelAndView("produto/editar"); // Volta para a tela de edição com o erro
+        try {
+            serviceProduto.salvar(produto);
+            redirectAttributes.addFlashAttribute("success", "Produto atualizado com sucesso!");
+            return new ModelAndView("redirect:/produto/lista");
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("produto", produto);
+            model.addAttribute("fornecedor", serviceFornecedor.listarTodos());
+            return new ModelAndView("produto/editar");
         }
-
-        // Validação: Verificar se a data de vencimento é no passado
-        if (produto.getProVencimento().isBefore(LocalDate.now())) {
-            model.addAttribute("errorMessage", "A data de vencimento não pode ser anterior à data atual.");
-            model.addAttribute("produto", produto); // Repassar o produto com os dados
-            model.addAttribute("fornecedor", serviceFornecedor.listarTodos()); // Repassar fornecedores
-            return new ModelAndView("produto/editar"); // Volta para a tela de edição com o erro
-        }
-
-        // Se as validações passarem, salvar o produto
-        serviceProduto.salvar(produto);
-
-        // Redireciona para a lista de produtos
-        return new ModelAndView("redirect:/produto/lista");
     }
 
     @Override
     @GetMapping("/excluir/{id}")
     public ModelAndView excluir(@PathVariable("id") Long atributo) {
-        ModelAndView mv = new ModelAndView("/produto/excluir.html");
+        ModelAndView mv = new ModelAndView("produto/excluir");
         mv.addObject("produto", serviceProduto.localizar(atributo));
         return mv;
     }
 
     @PostMapping("/excluir")
     @Override
-    public ModelAndView remover(Produtos objeto) {
-        ModelAndView mv;
+    public ModelAndView remover(Produtos objeto, RedirectAttributes redirectAttributes) {
         try {
             serviceProduto.excluir(objeto);
-            mv = new ModelAndView("redirect:/produto/lista");
+            redirectAttributes.addFlashAttribute("success", "Produto excluído com sucesso!");
+            return new ModelAndView("redirect:/produto/lista");
         } catch (RuntimeException e) {
-            mv = new ModelAndView("produto/excluir"); // Exibe a página de confirmação com erro
             Produtos produto = serviceProduto.localizar(objeto.getProId());
+            ModelAndView mv = new ModelAndView("produto/excluir");
             mv.addObject("produto", produto);
-            mv.addObject("erro", e.getMessage()); // Exibe a mensagem de erro
+            mv.addObject("erro", "Erro ao excluir produto: " + e.getMessage());
+            return mv;
         }
-        return mv;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package tg.codigo.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,15 +42,28 @@ public class ControllerVenda implements Icontrolador<Venda, Long> {
 
     @Override
     @PostMapping("/saida")
-    public ModelAndView postNovo(@ModelAttribute("venda") Venda venda, RedirectAttributes redirectAttributes) {
+public ModelAndView postNovo(@ModelAttribute("venda") Venda venda, RedirectAttributes redirectAttributes) {
+    try {
         serviceVenda.salvar(venda);
+        List<String> alertas = serviceVenda.getAlertasEstoque();
+
         String mensagem = venda.getVenAcao().equals("entrada")
                 ? "Entrada de produto registrada com sucesso!"
                 : "Saída de produto registrada com sucesso!";
-
         redirectAttributes.addFlashAttribute("success", mensagem);
+
+        if (!alertas.isEmpty()) {
+            redirectAttributes.addFlashAttribute("alertasEstoque", alertas);
+        }
+
         return new ModelAndView("redirect:/vendas/lista");
+
+    } catch (RuntimeException e) {
+        redirectAttributes.addFlashAttribute("erro", e.getMessage());
+        return new ModelAndView("redirect:/vendas/saida");
     }
+}
+
 
     @GetMapping("/lista")
     public ModelAndView listarTodos() {
@@ -68,7 +83,7 @@ public class ControllerVenda implements Icontrolador<Venda, Long> {
     }
 
     @Override
-    public ModelAndView remover(Venda objeto) {
+    public ModelAndView remover(Venda objeto, RedirectAttributes redirectAttributes) {
         throw new UnsupportedOperationException("Unimplemented method 'remover'");
     }
 }

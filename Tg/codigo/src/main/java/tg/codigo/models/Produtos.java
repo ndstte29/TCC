@@ -24,7 +24,8 @@ public class Produtos {
     private String proCategoria;
 
     @Column(nullable = false)
-    private int proUnidade;
+    private int proQuantidadeEstoque;
+
 
     @Column(nullable = false)
     private int proEstoqueminimo;
@@ -54,6 +55,14 @@ public class Produtos {
     public void setProNome(String proNome) {
         this.proNome = proNome;
     }
+ 
+    public int getProQuantidadeEstoque() {
+        return proQuantidadeEstoque;
+    }
+
+    public void setProQuantidadeEstoque(int proQuantidadeEstoque) {
+        this.proQuantidadeEstoque = proQuantidadeEstoque;
+    }
 
     public String getProCategoria() {
         return proCategoria;
@@ -61,14 +70,6 @@ public class Produtos {
 
     public void setProCategoria(String proCategoria) {
         this.proCategoria = proCategoria;
-    }
-
-    public int getProUnidade() {
-        return proUnidade;
-    }
-
-    public void setProUnidade(int proUnidade) {
-        this.proUnidade = proUnidade;
     }
 
     public int getProEstoqueminimo() {

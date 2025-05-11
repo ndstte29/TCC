@@ -1,9 +1,12 @@
-    package tg.codigo.services;
+package tg.codigo.services;
 
+import java.time.LocalDate;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
 import tg.codigo.interfaces.IService;
 import tg.codigo.models.Produtos;
 import tg.codigo.repositories.RepositoryProduto;
@@ -16,25 +19,40 @@ public class ServiceProduto implements IService<Produtos, Long> {
 
     @Override
     public Produtos salvar(Produtos objeto) {
+        validarProduto(objeto);
         return repositoryProduto.save(objeto);
+    }
+
+    private void validarProduto(Produtos produto) {
+        if (produto.getProEstoquemaximo() < produto.getProEstoqueminimo()) {
+            throw new RuntimeException("O estoque máximo deve ser maior que o estoque mínimo.");
+        }
+
+        if(produto.getProEstoquemaximo() < produto.getProQuantidadeEstoque()){
+            throw new RuntimeException("A quantidade não pode ser maior que o estoque maximo.");
+        }
+
+        if (produto.getProVencimento() != null && produto.getProVencimento().isBefore(LocalDate.now())) {
+            throw new RuntimeException("A data de vencimento não pode ser anterior à data atual.");
+        }
     }
 
     public List<Produtos> listarTodos() {
         return repositoryProduto.findAll();
     }
+
     @Override
-    public Produtos localizar(Long atributo) {
-       
-        return repositoryProduto.findById(atributo).get();
+    public Produtos localizar(Long id) {
+        return repositoryProduto.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado."));
     }
+
     @Override
     public void excluir(Produtos objeto) {
-       
-         try{
+        try {
             repositoryProduto.delete(objeto);
-        }
-        catch (DataIntegrityViolationException e){
-            throw new RuntimeException("Este registro não pode ser excluido.");
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Este produto não pode ser excluído.");
         }
     }
 
