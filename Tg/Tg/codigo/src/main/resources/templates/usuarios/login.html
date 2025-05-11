@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="/css/styleLogin.css">
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            /*[[${showAlert}]]*/
+            if (/*[[${showAlert}]]*/ false) {
+                alert("Usuário ou senha incorretos!");
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm" th:action="@{/usuarios/login}" method="post">
+            <label for="usuLogin">Usuário:</label>
+            <input type="text" id="usuLogin" name="usuLogin" required>
+
+            <label for="usuSenha">Senha:</label>
+            <input type="password" id="usuSenha" name="usuSenha" required>
+            
+            <button type="submit">Entrar</button>
+            <a th:href="@{/usuarios/esqueci-senha}" class="forgot-password">Esqueceu a senha?</a>
+        </form>
+    </div>
+</body>
+</html>

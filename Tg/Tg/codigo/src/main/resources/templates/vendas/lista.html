@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Vendas</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div th:if="${success}" class="alert alert-success">
+        <span th:text="${success}"></span>
+    </div>
+
+    <div class="content">
+        <h1>Tabela de Vendas</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ação</th>
+                    <th>Quantidade</th>
+                    <th>Produto</th>
+                    <th>Usuário</th>
+                    <th>Data da Venda</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="venda : ${venda}">
+                    <td th:text="${venda.venAcao}"></td>
+                    <td th:text="${venda.venQuantidade}"></td>
+                    <td th:text="${venda.produto != null ? venda.produto.proNome : 'produto não disponível'}"></td>
+                    <td th:text="${venda.usuario != null ? venda.usuario.usuNome : 'Usuário não disponível'}"></td>
+                    <td th:text="${venda.venData}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+</script>
+
+</body>
+
+</html>

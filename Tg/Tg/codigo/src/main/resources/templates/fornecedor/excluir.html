@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Excluir Fornecedor</title>
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/menu :: menu}"></div>
+    <div class="content">
+        <h1>Excluir Fornecedor</h1>
+
+        <p>Tem certeza que deseja excluir o fornecedor abaixo?</p>
+
+        <div>
+            <strong>CNPJ:</strong> <span th:text="${fornecedor.forCnpj}"></span><br>
+            <strong>Razão Social:</strong> <span th:text="${fornecedor.forRazaoSocial}"></span><br>
+            <strong>Logradouro:</strong> <span th:text="${fornecedor.forLogradouro}"></span><br>
+            <strong>Número:</strong> <span th:text="${fornecedor.forNumero}"></span><br>
+            <strong>Cidade:</strong> <span th:text="${fornecedor.forCidade}"></span><br>
+            <strong>Bairro:</strong> <span th:text="${fornecedor.forBairro}"></span><br>
+            <strong>Estado:</strong> <span th:text="${fornecedor.forEstado}"></span><br>
+            <strong>CEP:</strong> <span th:text="${fornecedor.forCep}"></span><br>
+            <strong>Telefone:</strong> <span th:text="${fornecedor.forTelefone}"></span>
+        </div>
+
+        <form action="/fornecedor/excluir" th:object="${fornecedor}" method="post">
+            <input type="hidden" th:field="*{forCnpj}" />
+            <button type="submit">Confirmar Exclusão</button>
+        </form>
+
+        <a href="/fornecedor/lista">Cancelar e Voltar à Lista</a>
+    </div>
+</body>
+
+</html>

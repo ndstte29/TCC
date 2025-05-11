@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Esqueci minha senha</title>
+    <link rel="stylesheet" th:href="@{/css/styleLogin.css}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Recuperar Senha</h1>
+        
+        <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+        <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+        
+        <form th:action="@{/usuarios/solicitar-redefinicao}" method="post">
+            <div class="form-group">
+                <label for="email">Digite seu e-mail cadastrado:</label>
+                <input type="email" id="email" name="email" required class="form-control">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Enviar Link</button>
+            <a th:href="@{/usuarios/login}" class="btn btn-link">Voltar ao Login</a>
+        </form>
+    </div>
+</body>
+</html>

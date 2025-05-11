@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Criar Novo Produto</title>
+</head>
+
+<body>
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div class="content">
+        <h1>Criar Novo Produto</h1>
+        <form action="/produto/novo" th:object="${produto}" method="post" id="formProduto">
+            <label for="proNome">Nome:</label>
+            <input type="text" id="proNome" th:field="*{proNome}" required>
+
+            <label for="proCategoria">Categoria:</label>
+            <select id="proCategoria" th:field="*{proCategoria}" required>
+                <option value="cerveja">Cerveja</option>
+                <option value="agua" selected>Água</option>
+                <option value="refrigerante">Refrigerante</option>
+            </select>
+
+            <label for="proUnidade">Quantidade:</label>
+            <input type="number" id="proUnidade" th:field="*{proUnidade}" required>
+
+            <label for="proVencimento">Vencimento:</label>
+            <input type="date" id="proVencimento" th:field="*{proVencimento}" required
+                min="${#dates.format(T(java.time.LocalDate).now(),'yyyy-MM-dd')}">
+
+            <label for="proEstoqueminimo">Estoque Mínimo:</label>
+            <input type="number" id="proEstoqueminimo" th:field="*{proEstoqueminimo}" required>
+
+            <label for="proEstoquemaximo">Estoque Máximo</label>
+            <input type="number" id="proEstoquemaximo" th:field="*{proEstoquemaximo}" required>
+
+            <label for="proFornecedor">Fornecedor</label>
+            <select th:field="*{fornecedor.forId}" required>
+                <option th:each="f: ${fornecedor}" th:value="${f.forId}" th:text="${f.forRazaoSocial}"
+                    th:selected="${f.forId == produto.fornecedor.forId}">
+                </option>
+            </select>
+
+            <button type="submit">Salvar Produto</button>
+        </form>
+
+        <a href="/produto/lista">Voltar à lista de produtos</a>
+    </div>
+
+</body>
+
+</html>

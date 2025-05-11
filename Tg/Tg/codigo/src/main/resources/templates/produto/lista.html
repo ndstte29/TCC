@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Lista de Produtos</title>
+</head>
+
+<body>
+
+    <div th:replace="fragments/menu :: menu"></div>
+
+    <div th:if="${success}" class="alert alert-success">
+        <span th:text="${success}"></span>
+    </div>
+
+    <div class="content">
+        <h1>Lista de Produtos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Vencimento</th>
+                    <th>Fornecedor</th>
+                    <th>Quantidade</th>
+                    <th>Estoque Minimo</th>
+                    <th>Estoque Maximo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="produto : ${produtos}">
+                    <td th:text="${produto.proId}"></td>
+                    <td th:text="${produto.proNome}"></td>
+                    <td th:text="${produto.proCategoria}"></td>
+                    <td th:text="${produto.proVencimento}"></td>
+                    <td
+                        th:text="${produto.fornecedor != null ? produto.fornecedor.forRazaoSocial : 'Fornecedor não disponível'}">
+                    </td>
+                    <td th:text="${produto.proUnidade}"></td>
+                    <td th:text="${produto.proEstoqueminimo}"></td>
+                    <td th:text="${produto.proEstoquemaximo}"></td>
+                    <td>
+                        <!-- Botão para editar -->
+                        <a th:href="@{/produto/editar/}+${produto.proId}">
+                            <button class="btn">Editar</button>
+                        </a>
+
+                        <!-- Botão para excluir -->
+                        <a th:href="@{/produto/excluir/}+${produto.proId}">
+                            <button class="btn">Excluir</button>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/produto/novo">Criar Novo Produto</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+</script>
+</body>
+
+</html>
