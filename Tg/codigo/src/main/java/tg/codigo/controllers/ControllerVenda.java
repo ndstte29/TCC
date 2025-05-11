@@ -2,10 +2,17 @@ package tg.codigo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Venda;
+import tg.codigo.services.ServiceProduto;
+import tg.codigo.services.ServiceUsuario;
 import tg.codigo.services.ServiceVenda;
 
 @Controller
@@ -15,73 +22,53 @@ public class ControllerVenda implements Icontrolador<Venda, Long> {
     @Autowired
     private ServiceVenda serviceVenda;
 
+    @Autowired
+    private ServiceProduto serviceProduto;
+
+    @Autowired
+    private ServiceUsuario serviceUsuario;
+
     @Override
+    @GetMapping("/saida")
+    public ModelAndView getNovo() {
+        ModelAndView mv = new ModelAndView("vendas/saida");
+        mv.addObject("venda", new Venda());
+        mv.addObject("produto", serviceProduto.listarTodos());
+        mv.addObject("usuario", serviceUsuario.listarTodos());
+        return mv;
+    }
+
+    @Override
+    @PostMapping("/saida")
+    public ModelAndView postNovo(@ModelAttribute("venda") Venda venda, RedirectAttributes redirectAttributes) {
+        serviceVenda.salvar(venda);
+        String mensagem = venda.getVenAcao().equals("entrada")
+                ? "Entrada de produto registrada com sucesso!"
+                : "Saída de produto registrada com sucesso!";
+
+        redirectAttributes.addFlashAttribute("success", mensagem);
+        return new ModelAndView("redirect:/vendas/lista");
+    }
+
     @GetMapping("/lista")
     public ModelAndView listarTodos() {
         ModelAndView mv = new ModelAndView("vendas/lista");
-        mv.addObject("vendas", serviceVenda.listarTodos());
+        mv.addObject("venda", serviceVenda.listarTodos());
         return mv;
     }
 
     @Override
-    @GetMapping("/novo")
-    public ModelAndView getNovo() {
-        ModelAndView mv = new ModelAndView("vendas/novo");
-        mv.addObject("venda", new Venda());
-        return mv;
+    public ModelAndView editar(Long atributo) {
+        throw new UnsupportedOperationException("Unimplemented method 'editar'");
     }
 
     @Override
-    @PostMapping("/novo")
-    public ModelAndView postNovo(@ModelAttribute("venda") Venda venda) {
-        serviceVenda.salvar(venda);
-        return new ModelAndView("redirect:/vendas/lista");
+    public ModelAndView excluir(Long atributo) {
+        throw new UnsupportedOperationException("Unimplemented method 'excluir'");
     }
 
     @Override
-    @GetMapping("/editar/{id}")
-    public ModelAndView editar(@PathVariable("id") Long id) {
-        ModelAndView mv = new ModelAndView("vendas/editar");
-        Venda venda = serviceVenda.localizar(id);
-        if (venda != null) {
-            mv.addObject("venda", venda);
-        } else {
-            mv.setViewName("redirect:/vendas/lista");
-        }
-        return mv;
-    }
-
-    @PostMapping("/editar")
-    public ModelAndView editar(@ModelAttribute("venda") Venda venda) {
-        serviceVenda.salvar(venda);
-        return new ModelAndView("redirect:/vendas/lista");
-    }
-
-    @Override
-    @GetMapping("/excluir/{id}")
-    public ModelAndView excluir(@PathVariable("id") Long id) {
-        ModelAndView mv = new ModelAndView("vendas/excluir");
-        Venda venda = serviceVenda.localizar(id);
-        if (venda != null) {
-            mv.addObject("venda", venda);
-        } else {
-            mv.setViewName("redirect:/vendas/lista");
-        }
-        return mv;
-    }
-
-    @PostMapping("/excluir")
-    @Override
-    public ModelAndView remover(@ModelAttribute("venda") Venda venda) {
-        ModelAndView mv;
-        try {
-            serviceVenda.excluir(venda);
-            mv = new ModelAndView("redirect:/vendas/lista");
-        } catch (RuntimeException e) {
-            mv = new ModelAndView("vendas/excluir");
-            mv.addObject("venda", venda);
-            mv.addObject("erro", e.getMessage());
-        }
-        return mv;
+    public ModelAndView remover(Venda objeto) {
+        throw new UnsupportedOperationException("Unimplemented method 'remover'");
     }
 }

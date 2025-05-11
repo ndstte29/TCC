@@ -13,19 +13,19 @@
         <h1>Editar Usuário</h1>
         <form action="/usuarios/editar" method="post" th:object="${usuarios}">
             <input type="hidden" th:field="*{usuId}" />
-            <div>
+
                 <label for="usuNome">Nome:</label>
                 <input type="text" id="usuNome" th:field="*{usuNome}" required>
-            </div>
-            <div>
+
+                <label for="usuEmail">Email:</label>
+                <input type="text" id="usuEmail" th:field="*{usuEmail}" required>
+
                 <label for="usuLogin">Login:</label>
                 <input type="text" id="usuLogin" th:field="*{usuLogin}" required>
-            </div>
-            <div>
+
                 <label for="usuSenha">Senha:</label>
                 <input type="password" id="usuSenha" th:field="*{usuSenha}" required>
-            </div>
-            <div>
+
                 <button type="submit">Salvar</button>
             </div>
         </form>

@@ -40,7 +40,6 @@ public class ServiceVenda implements IService<Venda, Long> {
 
     @Override
     public Venda Atualizar(Venda objeto) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'Atualizar'");
     }
 }

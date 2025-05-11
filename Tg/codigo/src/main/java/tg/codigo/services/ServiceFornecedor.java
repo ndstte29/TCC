@@ -16,7 +16,6 @@ public class ServiceFornecedor implements IService<Fornecedor, Long> {
 
     @Override
     public Fornecedor salvar(Fornecedor objeto) {
-        // Verifica se já existe um fornecedor com este CNPJ
         Fornecedor fornecedorExistente = repositoryFornecedor.findByForCnpj(objeto.getForCnpj());
         
         if (fornecedorExistente != null && !fornecedorExistente.getForId().equals(objeto.getForId())) {

@@ -190,6 +190,7 @@ th, td {
     text-align: left;
     border-bottom: 1px solid #ddd;
     border-radius: 2px;
+    text-align: center;
 }
 
 th {
@@ -210,3 +211,83 @@ td a {
 td a:hover {
     text-decoration: underline;
 }
+/* Adicione ao seu style.css */
+input:disabled {
+    background-color: #f0f0f0;
+}
+
+.loading {
+    position: relative;
+    color: transparent;
+}
+
+.loading::after {
+    content: "Buscando...";
+    position: absolute;
+    left: 0;
+    color: #666;
+}
+/* Estilo para caixa de erro */
+.alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;  /* Largura da caixa, pode ser alterada */
+    max-width: 600px;  /* Limite máximo da largura */
+    margin: 10px auto;  /* Centraliza a caixa no topo */
+    padding: 20px;
+    font-size: 18px;
+}
+
+/* Caixa de Sucesso */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.alert strong {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.alert:before {
+    content: "⚠️";
+    margin-right: 10px;
+}
+

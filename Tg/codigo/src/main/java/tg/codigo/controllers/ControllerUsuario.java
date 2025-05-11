@@ -2,8 +2,12 @@ package tg.codigo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Usuarios;
 import tg.codigo.services.ServiceUsuario;
@@ -23,7 +27,6 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
         return mv;
     }
 
-    // Exibir formulário para criar um novo usuário
     @Override
     @GetMapping("/novo")
     public ModelAndView getNovo() {
@@ -35,8 +38,9 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
     // Salvar um novo usuário
     @Override
     @PostMapping("/novo")
-    public ModelAndView postNovo(@ModelAttribute("usuarios") Usuarios usuarios) {
+    public ModelAndView postNovo(@ModelAttribute("usuarios") Usuarios usuarios,  RedirectAttributes redirectAttributes) {
         serviceUsuario.salvar(usuarios);
+        redirectAttributes.addFlashAttribute("success", "Usuario cadastrado com sucesso!");
         return new ModelAndView("redirect:/usuarios/lista");
     }
 
@@ -88,6 +92,93 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
             mv.addObject("usuarios", usuarios);
             mv.addObject("erro", e.getMessage());
         }
+        return mv;
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm(HttpSession session, Model model) {
+        Boolean loginError = (Boolean) session.getAttribute("loginError");
+        if (loginError != null && loginError) {
+            model.addAttribute("showAlert", true);
+            session.removeAttribute("loginError");
+        }
+        return "usuarios/login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(
+            @RequestParam String usuLogin,
+            @RequestParam String usuSenha,
+            HttpSession session) {
+
+        Usuarios usuario = serviceUsuario.buscarPorLoginESenha(usuLogin, usuSenha);
+
+        if (usuario != null) {
+            return "redirect:/index";
+        } else {
+            session.setAttribute("loginError", true);
+            return "redirect:/usuarios/login";
+        }
+    }
+
+    @GetMapping("/esqueci-senha")
+    public ModelAndView mostrarEsqueciSenha() {
+        return new ModelAndView("usuarios/esqueci-senha");
+    }
+
+    @PostMapping("/solicitar-redefinicao")
+    public ModelAndView solicitarRedefinicao(@RequestParam String email, HttpSession session) {
+        ModelAndView mv = new ModelAndView("usuarios/esqueci-senha");
+
+        try {
+            serviceUsuario.criarTokenRedefinicao(email);
+            session.setAttribute("emailRecuperacao", email);
+            mv.addObject("mensagem", "Instruções enviadas para seu e-mail");
+        } catch (RuntimeException e) {
+            mv.addObject("erro", e.getMessage());
+        }
+
+        return mv;
+    }
+
+    @GetMapping("/redefinir-senha")
+    public ModelAndView mostrarRedefinirSenha(@RequestParam String token) {
+        ModelAndView mv = new ModelAndView();
+        if (serviceUsuario.validarToken(token)) {
+            mv.setViewName("usuarios/redefinir-senha");
+            mv.addObject("token", token);
+        } else {
+            mv.setViewName("redirect:/usuarios/esqueci-senha");
+            mv.addObject("erro", "Link inválido ou expirado");
+        }
+        return mv;
+    }
+
+    @PostMapping("/atualizar-senha")
+    public ModelAndView atualizarSenha(
+            @RequestParam String token,
+            @RequestParam String novaSenha,
+            @RequestParam String confirmacaoSenha) {
+
+        ModelAndView mv = new ModelAndView();
+
+        if (!novaSenha.equals(confirmacaoSenha)) {
+            mv.setViewName("usuarios/redefinir-senha");
+            mv.addObject("erro", "As senhas não coincidem");
+            mv.addObject("token", token);
+            return mv;
+        }
+
+        try {
+            serviceUsuario.atualizarSenha(token, novaSenha);
+            mv.setViewName("redirect:/usuarios/login");
+            mv.addObject("mensagem", "Senha alterada com sucesso!");
+        } catch (RuntimeException e) {
+            mv.setViewName("usuarios/redefinir-senha");
+            mv.addObject("erro", e.getMessage());
+            mv.addObject("token", token);
+        }
+
         return mv;
     }
 }

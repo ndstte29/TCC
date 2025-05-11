@@ -1,40 +1,145 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de Indicadores</title>
-    <link rel="stylesheet" href="/css/styleIndicadores.css"> <!-- Link para o seu CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/styleIndicadores.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
+
 <body>
-    <!-- Conteúdo Principal -->
+
+    <div th:replace="fragments/menu :: menu"></div>
+
     <div class="content">
         <h1>Indicadores</h1>
 
-        <!-- Cards de Métricas -->
+        <!-- Formulário de Filtro -->
+        <div class="filter-container">
+            <form class="date-filter" method="get" th:action="@{/indicadores}">
+                <div class="date-fields">
+                    <h2>Filtrar por Data:</h2>
+                    <div class="date-input">
+                        <label for="startDate">Data Inicial:</label>
+                        <input type="date" id="startDate" name="startDate" th:value="${startDate}">
+                    </div>
+                    <div class="date-input">
+                        <label for="endDate">Data Final:</label>
+                        <input type="date" id="endDate" name="endDate" th:value="${endDate}">
+                    </div>
+                </div>
+                <button type="submit" class="button">Filtrar</button>
+            </form>
+        </div>
         <div class="metrics-container">
             <div class="metric-card">
-                <h3>Vendas Totais</h3>
-                <p>R$ 150.000</p>
+                <h3>Total de Saídas</h3>
+                <p th:text="${totalSaidas}">0</p>
             </div>
             <div class="metric-card">
-                <h3>Novos Clientes</h3>
-                <p>120</p>
+                <h3>Data Inicial</h3>
+                <p th:text="${startDate}">-</p>
             </div>
             <div class="metric-card">
-                <h3>Taxa de Conversão</h3>
-                <p>15%</p>
+                <h3>Data Final</h3>
+                <p th:text="${endDate}">-</p>
             </div>
         </div>
 
-        <!-- Gráfico -->
         <div class="chart-container">
-            <h2>Desempenho Mensal</h2>
-            <div class="chart-placeholder">
-                <!-- Aqui você pode integrar uma biblioteca de gráficos como Chart.js -->
-                <p>Gráfico de desempenho mensal</p>
+            <h2>Retiradas do Período</h2>
+            <h3 style="margin-top: 30px;">Gráfico de Retiradas por Usuário</h3>
+            <canvas id="graficoVendas" width="600" height="300"></canvas>
+            <div class="button-wrapper" style="margin-top: 20px;">
+                <!-- <button class="button" onclick="exportarComoImagem()">Exportar como Imagem</button> -->
+                <button class="button" onclick="exportarComoPDF()">Exportar como PDF</button>
             </div>
+
         </div>
     </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const vendas = /*[[${venda}]]*/[];
+
+        const usuarios = {};
+        vendas.forEach(v => {
+            const nome = v.usuario?.usuNome || 'Desconhecido';
+            if (!usuarios[nome]) {
+                usuarios[nome] = { entrada: 0, saida: 0 };
+            }
+            if (v.venAcao === 'entrada') {
+                usuarios[nome].entrada += v.venQuantidade;
+            } else if (v.venAcao === 'saida') {
+                usuarios[nome].saida += v.venQuantidade;
+            }
+        });
+
+        const labels = Object.keys(usuarios);
+        const entradas = labels.map(nome => usuarios[nome].entrada);
+        const saidas = labels.map(nome => usuarios[nome].saida);
+
+        const ctx = document.getElementById('graficoVendas').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Entradas',
+                        data: entradas,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Saídas',
+                        data: saidas,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            }
+        });
+        /*]]>*/
+    </script>
+    <script>
+        //function exportarComoImagem() {
+        //   const canvas = document.getElementById('graficoVendas');
+        // const link = document.createElement('a');
+        // link.download = 'grafico-vendas.png';
+        //link.href = canvas.toDataURL('image/png');
+        //link.click();
+        //}
+
+        async function exportarComoPDF() {
+            const canvas = document.getElementById('graficoVendas');
+            const canvasImg = canvas.toDataURL('image/png');
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            pdf.addImage(canvasImg, 'PNG', 10, 10, 190, 100);
+            pdf.save('grafico-vendas.pdf');
+        }
+    </script>
+
+
 </body>
+
 </html>

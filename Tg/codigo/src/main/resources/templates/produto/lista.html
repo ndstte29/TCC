@@ -12,6 +12,10 @@
 
     <div th:replace="fragments/menu :: menu"></div>
 
+    <div th:if="${success}" class="alert alert-success">
+        <span th:text="${success}"></span>
+    </div>
+
     <div class="content">
         <h1>Lista de Produtos</h1>
         <table>
@@ -25,7 +29,7 @@
                     <th>Quantidade</th>
                     <th>Estoque Minimo</th>
                     <th>Estoque Maximo</th>
-                    <th>Ações</th> <!-- Coluna para ações -->
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,6 +60,30 @@
         </table>
         <a href="/produto/novo">Criar Novo Produto</a>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+
+    $(document).ready(function(){
+        $(".close").click(function(){
+            $(this).parent().fadeOut();
+        });
+        
+        // Fecha automaticamente após 5 segundos
+        setTimeout(function(){
+            $(".alert").fadeOut();
+        }, 5000);
+    });
+</script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 package tg.codigo.interfaces;
 
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public interface Icontrolador<T, K> {
 
@@ -8,7 +9,7 @@ public interface Icontrolador<T, K> {
 
     public ModelAndView getNovo();
 
-    public ModelAndView postNovo(T objeto);
+    ModelAndView postNovo(T objeto, RedirectAttributes redirectAttributes); // Adicione RedirectAttributes
 
     public ModelAndView editar(K atributo); // Mantenha apenas este método
 

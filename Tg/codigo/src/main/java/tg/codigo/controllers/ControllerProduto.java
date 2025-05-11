@@ -1,7 +1,10 @@
 package tg.codigo.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Produtos;
 import tg.codigo.services.ServiceFornecedor;
@@ -38,11 +43,12 @@ public class ControllerProduto implements Icontrolador<Produtos, Long> {
 
     @Override
     @PostMapping("/novo")
-    public ModelAndView postNovo(@ModelAttribute("produto") Produtos pro) {
-        ModelAndView mv;
-        serviceProduto.salvar(pro);
-        mv = new ModelAndView("redirect:/produto/lista");
-        return mv;
+    public ModelAndView postNovo(
+            @ModelAttribute("produto") Produtos produto,
+            RedirectAttributes redirectAttributes) {
+        serviceProduto.salvar(produto);
+        redirectAttributes.addFlashAttribute("success", "Produto cadastrado com sucesso!");
+        return new ModelAndView("redirect:/produto/lista");
     }
 
     @Override
@@ -55,11 +61,31 @@ public class ControllerProduto implements Icontrolador<Produtos, Long> {
     }
 
     @PostMapping("/editar")
-    public ModelAndView editar(@ModelAttribute("produto") Produtos produto, @RequestParam("proId") Long id) {
+    public ModelAndView editar(@ModelAttribute("produto") Produtos produto, @RequestParam("proId") Long id,
+            Model model) {
         produto.setProId(id);
+
+        // Validação: Verificar se o estoque máximo não é menor que o estoque mínimo
+        if (produto.getProEstoquemaximo() < produto.getProEstoqueminimo()) {
+            model.addAttribute("errorMessage", "O estoque máximo não pode ser menor que o estoque mínimo.");
+            model.addAttribute("produto", produto); // Repassar o produto com os dados
+            model.addAttribute("fornecedor", serviceFornecedor.listarTodos()); // Repassar fornecedores
+            return new ModelAndView("produto/editar"); // Volta para a tela de edição com o erro
+        }
+
+        // Validação: Verificar se a data de vencimento é no passado
+        if (produto.getProVencimento().isBefore(LocalDate.now())) {
+            model.addAttribute("errorMessage", "A data de vencimento não pode ser anterior à data atual.");
+            model.addAttribute("produto", produto); // Repassar o produto com os dados
+            model.addAttribute("fornecedor", serviceFornecedor.listarTodos()); // Repassar fornecedores
+            return new ModelAndView("produto/editar"); // Volta para a tela de edição com o erro
+        }
+
+        // Se as validações passarem, salvar o produto
         serviceProduto.salvar(produto);
-        ModelAndView mv = new ModelAndView("redirect:/produto/lista");
-        return mv;
+
+        // Redireciona para a lista de produtos
+        return new ModelAndView("redirect:/produto/lista");
     }
 
     @Override

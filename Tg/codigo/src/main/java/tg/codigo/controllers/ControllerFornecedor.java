@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Fornecedor;
 import tg.codigo.services.ServiceFornecedor;
@@ -33,8 +35,14 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
 
     @Override
     @PostMapping("/novo")
-    public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
+<<<<<<< HEAD
+    public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor,
+                                RedirectAttributes redirectAttributes) {
+=======
+    public ModelAndView postNovo(@ModelAttribute("fornecedor") Fornecedor fornecedor,  RedirectAttributes redirectAttributes) {
+>>>>>>> 8d170c75fd494abd4b389b85a5d5dd187d1ba75a
         serviceFornecedor.salvar(fornecedor);
+        redirectAttributes.addFlashAttribute("success", "Fornecedor cadastrado com sucesso!");
         return new ModelAndView("redirect:/fornecedor/lista");
     }
 
@@ -55,13 +63,12 @@ public class ControllerFornecedor implements Icontrolador<Fornecedor, Long> {
     public ModelAndView postEditar(@ModelAttribute("fornecedor") Fornecedor fornecedor) {
     ModelAndView mv;
     try {
-        // Certifique-se de que a atualização está funcionando corretamente
-        serviceFornecedor.Atualizar(fornecedor);  // Chama o método Atualizar do service
-        mv = new ModelAndView("redirect:/fornecedor/lista");  // Redireciona para a lista
+        serviceFornecedor.Atualizar(fornecedor);
+        mv = new ModelAndView("redirect:/fornecedor/lista");
     } catch (RuntimeException e) {
         mv = new ModelAndView("fornecedor/editar");
         mv.addObject("fornecedor", fornecedor);
-        mv.addObject("erro", e.getMessage());  // Exibe o erro se houver algum problema
+        mv.addObject("erro", e.getMessage());
     }
     return mv;
 }

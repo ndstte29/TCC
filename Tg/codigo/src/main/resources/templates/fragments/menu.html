@@ -3,6 +3,13 @@
     <h2>Menu</h2>
     <ul>
         <li class="dropdown">
+            <a href="#">Movimentação de Estoque</a>
+            <ul class="dropdown-content">
+                <li><a th:href="@{/vendas/saida}">Registrar Entrada/Saida</a></li>
+                <li><a th:href="@{/vendas/lista}">Listar Saida</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
             <a href="#">Produtos</a>
             <ul class="dropdown-content">
                 <li><a th:href="@{/produto/novo}">Novo Produto</a></li>
