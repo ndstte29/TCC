@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import tg.codigo.interfaces.IService;
@@ -16,6 +18,9 @@ public class ServiceUsuario implements IService<Usuarios, Long> {
 
     @Autowired
     private RepositoryUsuario repositoryUsuario;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public List<Usuarios> listarTodos() {
         return repositoryUsuario.findAll();
@@ -50,21 +55,27 @@ public class ServiceUsuario implements IService<Usuarios, Long> {
     }
 
     public void criarTokenRedefinicao(String email) {
-        // Busca por usuLogin que é o e-mail no seu sistema
-        Usuarios usuario = repositoryUsuario.findByUsuLogin(email);
-        
+        Usuarios usuario = repositoryUsuario.findByUsuEmail(email);
+
         if (usuario == null) {
             throw new RuntimeException("E-mail não cadastrado no sistema");
         }
-        
+
         String token = UUID.randomUUID().toString();
         usuario.setResetToken(token);
         usuario.setTokenExpiration(LocalDateTime.now().plusHours(24));
         repositoryUsuario.save(usuario);
-        
-        // Implemente o envio de e-mail aqui (ou imprima no console para testes)
-        System.out.println("Token para " + email + ": " + token);
-        System.out.println("Link: http://seusite.com/usuarios/redefinir-senha?token=" + token);
+
+        enviarEmailRedefinicao(email, token); // <-- Aqui envia o e-mail de verdade
+    }
+
+    private void enviarEmailRedefinicao(String email, String token) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Redefinição de Senha");
+        message.setText("Clique no link para redefinir sua senha: http://localhost:8080/usuarios/redefinir-senha?token="
+                + token);
+        mailSender.send(message);
     }
 
     public boolean validarToken(String token) {

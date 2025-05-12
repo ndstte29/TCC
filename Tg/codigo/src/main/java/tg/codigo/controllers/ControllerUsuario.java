@@ -1,6 +1,7 @@
 package tg.codigo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,16 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
 
     @Autowired
     private ServiceUsuario serviceUsuario;
+
+    @GetMapping("/login")
+    public String showLoginForm(HttpSession session, Model model) {
+        Boolean loginError = (Boolean) session.getAttribute("loginError");
+        if (loginError != null && loginError) {
+            model.addAttribute("showAlert", true);
+            session.removeAttribute("loginError");
+        }
+        return "usuarios/login";  // Retorna a página de login
+    }
 
     @Override
     @GetMapping("/lista")
@@ -96,52 +107,26 @@ public class ControllerUsuario implements Icontrolador<Usuarios, Long> {
         return mv;
     }
 
-    @GetMapping("/login")
-    public String showLoginForm(HttpSession session, Model model) {
-        Boolean loginError = (Boolean) session.getAttribute("loginError");
-        if (loginError != null && loginError) {
-            model.addAttribute("showAlert", true);
-            session.removeAttribute("loginError");
-        }
-        return "usuarios/login";
-    }
-
-    @PostMapping("/login")
-public String processLogin(
-        @RequestParam String usuLogin,
-        @RequestParam String usuSenha,
-        HttpSession session) {
-
-    Usuarios usuario = serviceUsuario.buscarPorLoginESenha(usuLogin, usuSenha);
-
-    if (usuario != null) {
-        session.setAttribute("usuarioLogado", usuario);  // Configura o usuário na sessão
-        return "redirect:/index";  // Redireciona para a página principal após o login
-    } else {
-        session.setAttribute("loginError", true);
-        return "redirect:/usuarios/login";  // Muda o redirecionamento para /usuarios/login
-    }
-}
-
     @GetMapping("/esqueci-senha")
     public ModelAndView mostrarEsqueciSenha() {
         return new ModelAndView("usuarios/esqueci-senha");
     }
 
     @PostMapping("/solicitar-redefinicao")
-    public ModelAndView solicitarRedefinicao(@RequestParam String email, HttpSession session) {
-        ModelAndView mv = new ModelAndView("usuarios/esqueci-senha");
+public ModelAndView solicitarRedefinicao(@RequestParam String email, HttpSession session) {
+    ModelAndView mv = new ModelAndView("usuarios/esqueci-senha");
 
-        try {
-            serviceUsuario.criarTokenRedefinicao(email);
-            session.setAttribute("emailRecuperacao", email);
-            mv.addObject("mensagem", "Instruções enviadas para seu e-mail");
-        } catch (RuntimeException e) {
-            mv.addObject("erro", e.getMessage());
-        }
-
-        return mv;
+    try {
+        serviceUsuario.criarTokenRedefinicao(email);  // <- ponto crítico
+        session.setAttribute("emailRecuperacao", email);
+        mv.addObject("mensagem", "Instruções enviadas para seu e-mail");
+    } catch (RuntimeException e) {
+        mv.addObject("erro", e.getMessage());
     }
+
+    return mv;
+}
+
 
     @GetMapping("/redefinir-senha")
     public ModelAndView mostrarRedefinirSenha(@RequestParam String token) {

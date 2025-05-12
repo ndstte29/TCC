@@ -8,7 +8,7 @@ import tg.codigo.models.Usuarios;
 @Repository
 public interface RepositoryUsuario extends JpaRepository<Usuarios, Long> {
     // Método para recuperação por e-mail
-    Usuarios findByUsuLogin(String email);
+    Usuarios findByUsuEmail(String email);
     
     // Método para recuperação por token
     Usuarios findByResetToken(String token);
