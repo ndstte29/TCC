@@ -1,28 +1,54 @@
-<!-- fragments/alertas.html -->
 <div th:fragment="alertas">
-    <!-- Alerta de sucesso -->
-    <div id="alert-success" th:if="${success}" class="alert alert-success" role="alert">
-        <span th:text="${success}"></span>
+    <!-- Alerta de erro (estoque baixo) - inicialmente escondido -->
+    <div id="alert-estoque" th:if="${alertaEstoque}" class="alert-error" role="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; width: 600px;">
+        <span th:utext="${alertaEstoque}"></span>
     </div>
 
-    <!-- Alerta de erro -->
-    <div id="alert-error" th:if="${erro} ?: ${errorMessage}" class="alert" role="alert">
-        <span th:text="${erro} ?: ${errorMessage}"></span>
+    <!-- Outros alertas (sucesso/erro) -->
+    <div id="alert-generic" th:if="${success} or ${erro}" class="alert" 
+         th:classappend="${success} ? 'alert-success' : 'alert-error'" 
+         role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1000; width: 600px;">
+        <span th:utext="${success} ?: ${erro}"></span>
     </div>
 
-    <script>
-    setTimeout(() => {
-        const success = document.getElementById('alert-success');
-        const error = document.getElementById('alert-error');
 
-        if (success) {
-            success.style.display = 'none';
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+    // Lista de alertas na ordem que devem aparecer
+    const alertQueue = [
+        { id: 'alert-generic', showTime: 5000 },
+        { id: 'alert-estoque', showTime: 50000 }
+        // Adicione mais conforme necessário
+    ];
+
+    // Função para processar a fila de alertas
+    function processAlertQueue(index = 0) {
+        if (index >= alertQueue.length) return;
+
+        const alert = alertQueue[index];
+        const element = document.getElementById(alert.id);
+        
+        if (element) {
+            // Mostra o alerta atual
+            element.style.display = 'block';
+            
+            // Configura o tempo para esconder
+            setTimeout(() => {
+                element.style.display = 'none';
+                
+                // Espera 200ms (animação de fade out) antes do próximo
+                setTimeout(() => {
+                    processAlertQueue(index + 1);
+                }, 200);
+            }, alert.showTime);
+        } else {
+            // Se o alerta não existe, pula para o próximo
+            processAlertQueue(index + 1);
         }
+    }
 
-        if (error) {
-            error.style.display = 'none';
-        }
-    }, 5000);
-</script>
-
+    // Inicia o processo
+    processAlertQueue();
+});
+    </script>
 </div>

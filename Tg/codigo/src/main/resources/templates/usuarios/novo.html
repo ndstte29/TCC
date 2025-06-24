@@ -11,6 +11,9 @@
 <body>
     <div th:replace="fragments/menu :: menu"></div>
 
+    <div th:include="fragments/alertas :: alertas"></div>
+
+
     <div class="content">
         <h1>Novo Usuário</h1>
         <form action="/usuarios/novo" method="post" th:object="${usuarios}">
@@ -20,22 +23,35 @@
             <label for="usuPermissao">Permissao:</label>
             <select id="usuPermissao" th:field="*{usuPermissao}" required>
                 <option value="ADMIN">ADMIN</option>
-                <option value="funcionario" selected>Usuario</option>
+                <option value="Funcionario" selected>Funcionario</option>
             </select>
 
             <label for="usuEmail">Email:</label>
             <input type="text" id="usuEmail" th:field="*{usuEmail}" required>
 
-            <label for="usuLogin">Login:</label>
-            <input type="text" id="usuLogin" th:field="*{usuLogin}" required>
+            <label for="usuCpf">CPF:</label>
+            <input type="text" id="forCpf" th:field="*{usuCpf}" required onkeyup="formatarCPF(this)" maxlength="14" />
 
             <label for="usuSenha">Senha:</label>
             <input type="password" id="usuSenha" th:field="*{usuSenha}" required>
 
             <button type="submit">Salvar</button>
+        </form>
     </div>
-    </form>
-    </div>
+    <script>
+        function formatarCPF(campo) {
+            let cpf = campo.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+            if (cpf.length > 11) {
+                cpf = cpf.substring(0, 11); // Limita a 11 caracteres
+            }
+
+            campo.value = cpf
+                .replace(/^(\d{3})(\d)/, "$1.$2")  // Adiciona ponto após os primeiros 3 números
+                .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3") // Adiciona ponto após os primeiros 6 números
+                .replace(/\.(\d{3})(\d)/, ".$1-$2"); // Adiciona hífen antes dos últimos 2 números
+        }
+    </script>
 </body>
 
 </html>

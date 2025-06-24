@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import tg.codigo.interfaces.Icontrolador;
 import tg.codigo.models.Venda;
 import tg.codigo.services.ServiceProduto;
@@ -42,28 +43,27 @@ public class ControllerVenda implements Icontrolador<Venda, Long> {
 
     @Override
     @PostMapping("/saida")
-public ModelAndView postNovo(@ModelAttribute("venda") Venda venda, RedirectAttributes redirectAttributes) {
-    try {
-        serviceVenda.salvar(venda);
-        List<String> alertas = serviceVenda.getAlertasEstoque();
+    public ModelAndView postNovo(@ModelAttribute Venda venda, RedirectAttributes redirectAttributes) {
+        try {
+            serviceVenda.salvar(venda);
+            List<String> alertas = serviceVenda.getAlertasEstoque();
 
-        String mensagem = venda.getVenAcao().equals("entrada")
-                ? "Entrada de produto registrada com sucesso!"
-                : "Saída de produto registrada com sucesso!";
-        redirectAttributes.addFlashAttribute("success", mensagem);
+            String mensagem = venda.getVenAcao().equals("entrada")
+                    ? "Entrada de produto registrada com sucesso!"
+                    : "Saída de produto registrada com sucesso!";
+            redirectAttributes.addFlashAttribute("success", mensagem);
 
-        if (!alertas.isEmpty()) {
-            redirectAttributes.addFlashAttribute("alertasEstoque", alertas);
+            if (!alertas.isEmpty()) {
+                redirectAttributes.addFlashAttribute("alertasEstoque", alertas);
+            }
+
+            return new ModelAndView("redirect:/vendas/lista");
+
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            return new ModelAndView("redirect:/vendas/saida");
         }
-
-        return new ModelAndView("redirect:/vendas/lista");
-
-    } catch (RuntimeException e) {
-        redirectAttributes.addFlashAttribute("erro", e.getMessage());
-        return new ModelAndView("redirect:/vendas/saida");
     }
-}
-
 
     @GetMapping("/lista")
     public ModelAndView listarTodos() {
@@ -83,7 +83,7 @@ public ModelAndView postNovo(@ModelAttribute("venda") Venda venda, RedirectAttri
     }
 
     @Override
-    public ModelAndView remover(Venda objeto, RedirectAttributes redirectAttributes) {
+    public ModelAndView remover(Venda objeto, HttpSession session, RedirectAttributes redirectAttributes) {
         throw new UnsupportedOperationException("Unimplemented method 'remover'");
     }
 }

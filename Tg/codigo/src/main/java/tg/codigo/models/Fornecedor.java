@@ -14,10 +14,10 @@ public class Fornecedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long forId;
 
-    @Column(length = 14, nullable = false, unique = true)
+    @Column(length = 18, nullable = false, unique = true)
     private String forCnpj;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String forRazaoSocial;
 
     @Column(length = 100, nullable = false)

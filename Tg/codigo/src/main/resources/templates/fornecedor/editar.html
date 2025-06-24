@@ -11,43 +11,122 @@
 <body>
 
     <div th:replace="~{fragments/menu :: menu}"></div>
+    <div th:include="fragments/alertas :: alertas"></div>
+
     <div class="content">
         <h1>Editar Fornecedor</h1>
         <form th:action="@{/fornecedor/editar}" th:object="${fornecedor}" method="post">
             <input type="hidden" th:field="*{forId}" />
 
-                
-                <label for="forCnpj">CNPJ do Fornecedor:</label>
-                <input type="text" id="forCnpj" th:field="*{forCnpj}" readonly />
 
-                <label for="forRazaoSocial">Razão Social:</label>
-                <input type="text" id="forRazaoSocial" th:field="*{forRazaoSocial}" required />
+            <label for="forCnpj">CNPJ do Fornecedor:</label>
+            <input type="text" id="forCnpj" th:field="*{forCnpj}" readonly />
 
-                <label for="forLogradouro">Logradouro:</label>
-                <input type="text" id="forLogradouro" th:field="*{forLogradouro}" required />
+            <label for="forRazaoSocial">Razão Social:</label>
+            <input type="text" id="forRazaoSocial" th:field="*{forRazaoSocial}" required />
 
-                <label for="forNumero">Número:</label>
-                <input type="text" id="forNumero" th:field="*{forNumero}" required />
+            <label for="forCep">CEP:</label>
+            <input type="text" id="forCep" th:field="*{forCep}" required onblur="pesquisarCEP(this.value)"
+                onkeypress="mascaraCEP(this)" />
 
-                <label for="forCidade">Cidade:</label>
-                <input type="text" id="forCidade" th:field="*{forCidade}" required />
+            <label for="forLogradouro">Logradouro:</label>
+            <input type="text" id="forLogradouro" th:field="*{forLogradouro}" required />
 
-                <label for="forBairro">Bairro:</label>
-                <input type="text" id="forBairro" th:field="*{forBairro}" required />
+            <label for="forNumero">Número:</label>
+            <input type="text" id="forNumero" th:field="*{forNumero}" required />
 
-                <label for="forEstado">Estado:</label>
-                <input type="text" id="forEstado" th:field="*{forEstado}" required />
+            <label for="forCidade">Cidade:</label>
+            <input type="text" id="forCidade" th:field="*{forCidade}" required />
 
-                <label for="forCep">CEP:</label>
-                <input type="text" id="forCep" th:field="*{forCep}" required />
+            <label for="forBairro">Bairro:</label>
+            <input type="text" id="forBairro" th:field="*{forBairro}" required />
 
-                <label for="forTelefone">Telefone:</label>
-                <input type="text" id="forTelefone" th:field="*{forTelefone}" required />
+            <label for="forEstado">Estado:</label>
+            <input type="text" id="forEstado" th:field="*{forEstado}" required />
 
-                <button type="submit">Salvar</button>
+
+
+            <label for="forTelefone">Telefone:</label>
+            <input type="text" id="forTelefone" th:field="*{forTelefone}" required />
+
+            <button type="submit">Salvar</button>
         </form>
         <a href="/fornecedor/lista">Voltar à lista de Fornecedores</a>
     </div>
+
+    <script>
+
+        function formatarCNPJ(campo) {
+            let cnpj = campo.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+            if (cnpj.length > 14) {
+                cnpj = cnpj.substring(0, 14); // Limita a 14 caracteres
+            }
+
+            campo.value = cnpj
+                .replace(/^(\d{2})(\d)/, "$1.$2")   // Adiciona ponto após os primeiros 2 números
+                .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3") // Adiciona ponto após os primeiros 5 números
+                .replace(/\.(\d{3})(\d)/, ".$1/$2") // Adiciona barra após os primeiros 8 números
+                .replace(/(\d{4})(\d)/, "$1-$2");   // Adiciona hífen antes dos últimos 2 números
+        }
+
+        // Função para aplicar máscara de CEP
+        function mascaraCEP(cep) {
+            cep.value = cep.value.replace(/\D/g, ""); // Remove tudo que não é dígito
+            cep.value = cep.value.replace(/^(\d{5})(\d)/, "$1-$2"); // Coloca hífen entre o quinto e o sexto dígitos
+            return true;
+        }
+
+        // Função principal para consultar CEP
+        function pesquisarCEP(cep) {
+            cep = cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+            // Verifica se o CEP tem 8 dígitos
+            if (cep.length !== 8) {
+                alert("CEP inválido! Deve conter 8 dígitos.");
+                return;
+            }
+
+            // Mostra loading (opcional)
+            document.getElementById('forLogradouro').value = "Buscando...";
+
+            // Faz a requisição para a API ViaCEP
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert("CEP não encontrado!");
+                        limparCamposEndereco();
+                    } else {
+                        preencherCamposEndereco(data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar CEP:", error);
+                    alert("Erro ao consultar CEP. Tente novamente.");
+                    limparCamposEndereco();
+                });
+        }
+
+        // Preenche os campos com os dados do CEP
+        function preencherCamposEndereco(data) {
+            document.getElementById('forLogradouro').value = data.logradouro || '';
+            document.getElementById('forBairro').value = data.bairro || '';
+            document.getElementById('forCidade').value = data.localidade || '';
+            document.getElementById('forEstado').value = data.uf || '';
+
+            // Foca no campo número após preencher
+            document.getElementById('forNumero').focus();
+        }
+
+        // Limpa os campos de endereço
+        function limparCamposEndereco() {
+            document.getElementById('forLogradouro').value = '';
+            document.getElementById('forBairro').value = '';
+            document.getElementById('forCidade').value = '';
+            document.getElementById('forEstado').value = '';
+        }
+    </script>
 </body>
 
 </html>

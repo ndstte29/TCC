@@ -10,37 +10,43 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 </head>
 
 <body>
-
     <div th:replace="fragments/menu :: menu"></div>
 
     <div class="content">
         <h1>Indicadores</h1>
 
+        <!-- Mensagem de erro -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
         <!-- Formulário de Filtro -->
         <div class="filter-container">
-            <form class="date-filter" method="get" th:action="@{/indicadores}">
+            <form class="date-filter" method="get" th:action="@{/indicadores}" onsubmit="return validarDatas()">
                 <div class="date-fields">
                     <h2>Filtrar por Data:</h2>
                     <div class="date-input">
                         <label for="startDate">Data Inicial:</label>
-                        <input type="date" id="startDate" name="startDate" th:value="${startDate}">
+                        <input type="date" id="startDate" name="startDate" th:value="${startDateRaw}">
                     </div>
                     <div class="date-input">
                         <label for="endDate">Data Final:</label>
-                        <input type="date" id="endDate" name="endDate" th:value="${endDate}">
+                        <input type="date" id="endDate" name="endDate" th:value="${endDateRaw}">
                     </div>
                 </div>
                 <button type="submit" class="button">Filtrar</button>
             </form>
         </div>
+
         <div class="metrics-container">
             <div class="metric-card">
                 <h3>Total de Saídas</h3>
                 <p th:text="${totalSaidas}">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>Total de Entradas</h3>
+                <p th:text="${totalEntrada}">0</p>
             </div>
             <div class="metric-card">
                 <h3>Data Inicial</h3>
@@ -57,89 +63,131 @@
             <h3 style="margin-top: 30px;">Gráfico de Retiradas por Usuário</h3>
             <canvas id="graficoVendas" width="600" height="300"></canvas>
             <div class="button-wrapper" style="margin-top: 20px;">
-                <!-- <button class="button" onclick="exportarComoImagem()">Exportar como Imagem</button> -->
                 <button class="button" onclick="exportarComoPDF()">Exportar como PDF</button>
             </div>
-
         </div>
     </div>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const vendas = /*[[${venda}]]*/[];
+        let myChart = null;
+        
+        function renderChart() {
+            const vendas = /*[[${venda}]]*/ [];
+            console.log('Dados recebidos:', vendas);
+            
+            const usuarios = {};
+            vendas.forEach(v => {
+                const nome = v.usuario?.usuNome || 'Desconhecido';
+                if (!usuarios[nome]) {
+                    usuarios[nome] = { entrada: 0, saida: 0 };
+                }
+                if (v.venAcao === 'entrada') {
+                    usuarios[nome].entrada += v.venQuantidade;
+                } else if (v.venAcao === 'saida') {
+                    usuarios[nome].saida += v.venQuantidade;
+                }
+            });
 
-        const usuarios = {};
-        vendas.forEach(v => {
-            const nome = v.usuario?.usuNome || 'Desconhecido';
-            if (!usuarios[nome]) {
-                usuarios[nome] = { entrada: 0, saida: 0 };
+            const labels = Object.keys(usuarios);
+            const entradas = labels.map(nome => usuarios[nome].entrada);
+            const saidas = labels.map(nome => usuarios[nome].saida);
+
+            const ctx = document.getElementById('graficoVendas').getContext('2d');
+            
+            if (myChart) {
+                myChart.destroy();
             }
-            if (v.venAcao === 'entrada') {
-                usuarios[nome].entrada += v.venQuantidade;
-            } else if (v.venAcao === 'saida') {
-                usuarios[nome].saida += v.venQuantidade;
-            }
-        });
-
-        const labels = Object.keys(usuarios);
-        const entradas = labels.map(nome => usuarios[nome].entrada);
-        const saidas = labels.map(nome => usuarios[nome].saida);
-
-        const ctx = document.getElementById('graficoVendas').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Entradas',
-                        data: entradas,
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Saídas',
-                        data: saidas,
-                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        precision: 0
+            
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Entradas',
+                            data: entradas,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Saídas',
+                            data: saidas,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
                     }
                 }
+            });
+        }
+        
+        function validarDatas() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                alert('Por favor, selecione ambas as datas');
+                return false;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('A data inicial não pode ser maior que a data final');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChart();
+            
+            // Formatar datas para exibição nos inputs
+            function formatarDataParaInput(dateStr) {
+                if (!dateStr) return '';
+                const [day, month, year] = dateStr.split('/');
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
             }
         });
         /*]]>*/
     </script>
+    
     <script>
-        //function exportarComoImagem() {
-        //   const canvas = document.getElementById('graficoVendas');
-        // const link = document.createElement('a');
-        // link.download = 'grafico-vendas.png';
-        //link.href = canvas.toDataURL('image/png');
-        //link.click();
-        //}
-
         async function exportarComoPDF() {
             const canvas = document.getElementById('graficoVendas');
             const canvasImg = canvas.toDataURL('image/png');
 
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF();
-            pdf.addImage(canvasImg, 'PNG', 10, 10, 190, 100);
-            pdf.save('grafico-vendas.pdf');
+            
+            // Adiciona título
+            pdf.setFontSize(18);
+            pdf.text('Relatório de Indicadores', 105, 15, { align: 'center' });
+            
+            // Adiciona período
+            pdf.setFontSize(12);
+            pdf.text(`Período: ${document.querySelector('.metric-card:nth-child(3) p').textContent} a ${document.querySelector('.metric-card:nth-child(4) p').textContent}`, 105, 25, { align: 'center' });
+            
+            // Adiciona gráfico
+            pdf.addImage(canvasImg, 'PNG', 15, 35, 180, 90);
+            
+            // Adiciona totais
+            pdf.setFontSize(14);
+            pdf.text(`Total de Entradas: ${document.querySelector('.metric-card:nth-child(2) p').textContent}`, 20, 140);
+            pdf.text(`Total de Saídas: ${document.querySelector('.metric-card:nth-child(1) p').textContent}`, 20, 150);
+            
+            pdf.save('relatorio-indicadores.pdf');
         }
     </script>
-
-
 </body>
-
 </html>

@@ -1,5 +1,6 @@
 /* Estilos gerais */
 body {
+    background: linear-gradient(135deg, #4B3D3D, #daa520); /* Gradiente elegante */
     margin: 0;
     font-family: 'Times New Roman', Times, serif;
     background-color: #f5f5f5;

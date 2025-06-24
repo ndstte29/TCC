@@ -17,7 +17,7 @@ public class Produtos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long proId;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String proNome;
 
     @Column(length = 100, nullable = false)
