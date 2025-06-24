@@ -12,9 +12,7 @@
     
     <div th:replace="fragments/menu :: menu"></div>
 
-    <div th:if="${success}" class="alert alert-success">
-        <span th:text="${success}"></span>
-    </div>
+    <div th:include="fragments/alertas :: alertas"></div>
 
     <div class="content">
         <h1>Lista de Usuários</h1>
@@ -25,7 +23,7 @@
                     <th>Email</th>
                     <th>Nome</th>
                     <th>Permissao</th>
-                    <th>Login</th>
+                    <th>CPF</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -35,7 +33,7 @@
                     <td th:text="${usuarios.usuEmail}"></td>
                     <td th:text="${usuarios.usuNome}"></td>
                     <td th:text="${usuarios.usuPermissao}"></td>
-                    <td th:text="${usuarios.usuLogin}"></td>
+                    <td th:text="${usuarios.usuCpf}"></td>
                     
                     <td>
                         <a th:href="@{/usuarios/editar/}+${usuarios.usuId}">
@@ -51,29 +49,6 @@
         <a href="/usuarios/novo">Criar Novo Usuário</a>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $(".close").click(function(){
-            $(this).parent().fadeOut();
-        });
-        
-        // Fecha automaticamente após 5 segundos
-        setTimeout(function(){
-            $(".alert").fadeOut();
-        }, 5000);
-    });
-
-    $(document).ready(function(){
-        $(".close").click(function(){
-            $(this).parent().fadeOut();
-        });
-        
-        // Fecha automaticamente após 5 segundos
-        setTimeout(function(){
-            $(".alert").fadeOut();
-        }, 5000);
-    });
-</script>
 </body>
 
 </html>

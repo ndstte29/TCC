@@ -1,7 +1,4 @@
 package tg.codigo.models;
-
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,21 +18,17 @@ public class Usuarios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuId;
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String usuNome;
-    @Column(length = 100)
+    @Column(length = 100, unique = true, nullable = false)
     private String usuEmail;
-    @Column
+    @Column(nullable = false)
     private String usuPermissao;
-
-    @Column(length = 100)
-    private String usuLogin;
-    @Column(length = 100)
+    @Column(length = 15, unique = true, nullable = false)
+    private String usuCpf;
+    @Column(length = 100, nullable = false)
     private String usuSenha;
-    @Column(length = 100)
-    private String resetToken;
-    @Column
-    private LocalDateTime tokenExpiration;
+
 
     public Long getUsuId() {
         return usuId;
@@ -69,12 +62,12 @@ public class Usuarios {
         this.usuPermissao = usuPermissao;
     }
 
-    public String getUsuLogin() {
-        return usuLogin;
+    public String getUsuCpf() {
+        return usuCpf;
     }
 
-    public void setUsuLogin(String usuLogin) {
-        this.usuLogin = usuLogin;
+    public void setUsuCpf(String usuCpf) {
+        this.usuCpf = usuCpf;
     }
 
     public String getUsuSenha() {
@@ -83,22 +76,6 @@ public class Usuarios {
 
     public void setUsuSenha(String usuSenha) {
         this.usuSenha = usuSenha;
-    }
-
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
-
-    public LocalDateTime getTokenExpiration() {
-        return tokenExpiration;
-    }
-
-    public void setTokenExpiration(LocalDateTime tokenExpiration) {
-        this.tokenExpiration = tokenExpiration;
     }
 
 }

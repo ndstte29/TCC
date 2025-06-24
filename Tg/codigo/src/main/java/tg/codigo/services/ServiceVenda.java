@@ -30,7 +30,7 @@ public class ServiceVenda implements IService<Venda, Long> {
         validarOperacaoEstoque(venda);
         Venda vendaSalva = repositoryVenda.save(venda);
         atualizarEstoqueProduto(venda);
-        this.alertasEstoque = verificarAlertasEstoque(venda.getProduto()); // salva internamente
+        this.alertasEstoque = verificarAlertasEstoque(venda.getProduto());
         return vendaSalva;
     }
 
@@ -47,7 +47,7 @@ public class ServiceVenda implements IService<Venda, Long> {
         }
 
         if (venda.getVenAcao().equals("saida")) {
-            if (produto.getProQuantidadeEstoque() < quantidade) {
+            if (produto.getProQuantidadeEstoque() <= quantidade) {
                 throw new RuntimeException("A quantidade em estoque é de " +
                         produto.getProQuantidadeEstoque());
             }

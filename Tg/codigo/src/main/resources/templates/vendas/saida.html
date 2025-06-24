@@ -14,7 +14,7 @@
     <div th:replace="fragments/alertas :: alertas"></div>
 
     <div class="content">
-        <h1>Registrar Saída</h1>
+        <h1>Registrar Saída/Entrada</h1>
         <form action="/vendas/saida" th:object="${venda}" method="post">
             <label for="vendaQuantidade">Quantidade da Saída:</label>
             <input type="number" id="vendaQuantidade" th:field="*{venQuantidade}" min="1" required>
@@ -37,7 +37,7 @@
                 </option>
             </select>
 
-            <button type="submit">Registrar Saída</button>
+            <button type="submit">Registrar Saída/Entrada</button>
         </form>
         <a href="/produto/lista">Voltar à lista de produtos</a>
 

@@ -1,37 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
     <div th:replace="fragments/menu :: menu"></div>
+    <div th:include="fragments/alertas :: alertas"></div>
 
     <div class="content">
         <h1>Editar Usuário</h1>
         <form action="/usuarios/editar" method="post" th:object="${usuarios}">
             <input type="hidden" th:field="*{usuId}" />
 
-                <label for="usuNome">Nome:</label>
-                <input type="text" id="usuNome" th:field="*{usuNome}" required>
+            <label for="usuNome">Nome:</label>
+            <input type="text" id="usuNome" th:field="*{usuNome}" required>
 
-                <label for="usuPermissao">Permissao:</label>
-                <input type="text" id="usuPermissao" th:field="*{usuPermissao}" required>
+            <label for="usuPermissao">Permissao:</label>
+            <select id="usuPermissao" th:field="*{usuPermissao}" required>
+                <option value="ADMIN">ADMIN</option>
+                <option value="funcionario" selected>Funcionario</option>
+            </select>
 
-                <label for="usuEmail">Email:</label>
-                <input type="text" id="usuEmail" th:field="*{usuEmail}" required>
+            <label for="usuEmail">Email:</label>
+            <input type="text" id="usuEmail" th:field="*{usuEmail}" required>
 
-                <label for="usuLogin">Login:</label>
-                <input type="text" id="usuLogin" th:field="*{usuLogin}" required>
+            <label for="usuCpf">CPF:</label>
+            <input type="text" id="forCpf" th:field="*{usuCpf}" required onkeyup="formatarCPF(this)" maxlength="14" />
 
-                <label for="usuSenha">Senha:</label>
-                <input type="password" id="usuSenha" th:field="*{usuSenha}" required>
+            <label for="usuSenha">Senha:</label>
+            <input type="password" id="usuSenha" th:field="*{usuSenha}" required>
 
-                <button type="submit">Salvar</button>
-            </div>
-        </form>
+            <button type="submit">Salvar</button>
     </div>
+    </form>
+    <script>
+        function formatarCPF(campo) {
+            let cpf = campo.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+            if (cpf.length > 11) {
+                cpf = cpf.substring(0, 11); // Limita a 11 caracteres
+            }
+
+            campo.value = cpf
+                .replace(/^(\d{3})(\d)/, "$1.$2")  // Adiciona ponto após os primeiros 3 números
+                .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3") // Adiciona ponto após os primeiros 6 números
+                .replace(/\.(\d{3})(\d)/, ".$1-$2"); // Adiciona hífen antes dos últimos 2 números
+        }
+    </script>
 </body>
+
 </html>

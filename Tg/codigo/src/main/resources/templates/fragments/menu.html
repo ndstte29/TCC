@@ -31,10 +31,17 @@
             </ul>
         </li>
         <li class="dropdown">
-                <a href="#">Indicadores</a>
-                <ul class="dropdown-content">
-                    <li><a th:href="@{/indicadores}">Indicadores de Vendas</a></li>
-                </ul>
+            <a href="#">Indicadores</a>
+            <ul class="dropdown-content">
+                <li><a th:href="@{/indicadores}">Indicadores de Vendas</a></li>
+            </ul>
         </li>
     </ul>
+    
+    <!-- Logout na parte inferior -->
+    <div class="logout-section">
+        <a th:href="@{/usuarios/logout}" class="logout-button">
+            <i class="bi bi-box-arrow-right"></i> Sair do Sistema
+        </a>
+    </div>
 </div>
